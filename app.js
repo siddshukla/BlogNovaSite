@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const path = require("path");
 const methodOverride = require("method-override");
 const session = require("express-session");
+const MongoStore = require('connect-mongo'); // Added MongoStore
 const flash = require("connect-flash");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
@@ -23,22 +24,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 app.use(express.static(path.join(__dirname, "public")));
 
-// Session Configuration
-const sessionOptions = {
-  secret: process.env.SESSION_SECRET || "mysupersecretcode",
-  resave: false,
-  saveUninitialized: true,
-  cookie: {
-    expires: Date.now() + 7 * 24 * 60 * 60 * 1000,
-    maxAge: 7 * 24 * 60 * 60 * 1000,
-    httpOnly: true,
-  },
-};
-
-// Setup session before using it in routes
-app.use(session(sessionOptions));
-app.use(flash());
-
 // Define utility functions
 class ExpressError extends Error {
   constructor(statusCode, message) {
@@ -54,7 +39,7 @@ const wrapAsync = function (fn) {
   };
 };
 
-// Define schemas with Joi (assumed to be in schema.js)
+// Define schemas with Joi
 const Joi = require('joi');
 
 const postSchema = Joi.object({
@@ -74,7 +59,6 @@ const reviewSchema = Joi.object({
 });
 
 // MongoDB Models
-// Review Model
 const reviewSchema_mongo = new mongoose.Schema({
   comment: String,
   rating: {
@@ -98,7 +82,13 @@ const Review = mongoose.model("Review", reviewSchema_mongo);
 const userSchema = new mongoose.Schema({
   email: {
     type: String,
-    required: true
+    required: true,
+    unique: true
+  },
+  username: {
+    type: String,
+    required: true,
+    unique: true
   }
 });
 
@@ -157,15 +147,44 @@ const Post = mongoose.model("Post", postSchema_mongo);
 
 // Connect to Database
 async function main() {
-  await mongoose.connect(MONGO_URL);
-  console.log("Connected to Database");
+  try {
+    await mongoose.connect(MONGO_URL, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+    console.log("Connected to Database");
+  } catch (err) {
+    console.error("Database Connection Error:", err);
+  }
 }
 
-main().catch((err) => {
-  console.log(err);
-});
+main();
 
-// Passport configuration - INITIALIZE BEFORE CONFIGURING STRATEGIES
+// Session Configuration with MongoStore
+const sessionOptions = {
+  secret: process.env.SESSION_SECRET || "mysupersecretcode",
+  resave: false,
+  saveUninitialized: false,
+  store: MongoStore.create({
+    mongoUrl: MONGO_URL,
+    touchAfter: 24 * 3600, // Only update session if 24 hours have passed
+    crypto: {
+      secret: process.env.SESSION_SECRET || "mysupersecretcode"
+    }
+  }),
+  cookie: {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+    maxAge: 7 * 24 * 60 * 60 * 1000, // 1 week
+  }
+};
+
+// Setup session before using it in routes
+app.use(session(sessionOptions));
+app.use(flash());
+
+// Passport configuration
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -181,6 +200,7 @@ app.use((req, res, next) => {
   next();
 });
 
+// Middleware Functions
 const isLoggedIn = (req, res, next) => {
   if (!req.isAuthenticated()) {
     req.session.returnTo = req.originalUrl;
@@ -251,18 +271,17 @@ app.post(
         return res.redirect("/signup");
       }
       
-      // Check if email already exists (optional)
-      if (email) {
-        const existingEmail = await User.findOne({ email });
-        if (existingEmail) {
-          req.flash("error", "Email already in use");
-          return res.redirect("/signup");
-        }
+      // Check if email already exists
+      const existingEmail = await User.findOne({ email });
+      if (existingEmail) {
+        req.flash("error", "Email already in use");
+        return res.redirect("/signup");
       }
       
       const newUser = new User({ email, username });
       const registeredUser = await User.register(newUser, password);
 
+      // Explicitly login after registration
       req.login(registeredUser, (err) => {
         if (err) {
           return next(err);
@@ -344,9 +363,11 @@ app.post(
     res.redirect("/posts");
   })
 );
+
 app.get("/privacy-policy", (req, res) => {
   res.render("privacy.ejs");
 });
+
 app.get(
   "/posts/:id/edit",
   isLoggedIn,
@@ -407,7 +428,7 @@ app.post(
     }
 
     const newReview = new Review(req.body.review);
-    newReview.author = post._id; // This may be optional depending on your schema
+    newReview.author = post._id;
 
     await newReview.save();
     post.reviews.push(newReview._id);
@@ -435,7 +456,7 @@ app.all("*", (req, res, next) => {
 });
 
 app.use((err, req, res, next) => {
-  console.error(err); // Add proper error logging
+  console.error(err);
   let { statusCode = 500, message = "Something Went Wrong" } = err;
   res.status(statusCode).render("error.ejs", { message });
 });
@@ -445,3 +466,5 @@ const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => {
   console.log(`Listening on PORT ${PORT}`);
 });
+
+module.exports = app; // Add this for Vercel deployment
