@@ -270,15 +270,8 @@ form {
   color: var(--text-darker);
 }
 
-.remember-me {
-  display: flex;
-  align-items: center;
-}
 
-.remember-me input {
-  margin-right: 0.5rem;
-  cursor: pointer;
-}
+
 
 .forgot-password {
   color: var(--text-darker);
@@ -375,7 +368,7 @@ form {
   .signup-container {
     padding: 2rem;
     max-width: 90%;
-    max-height: 90vh;
+    max-height: 110vh;
   }
 
   .login-header h2,
