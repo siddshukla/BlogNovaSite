@@ -345,6 +345,14 @@ app.post(
   })
 );
 
+
+
+app.get("/privacy-policy", (req, res) => {
+  res.render("privacy.ejs");
+});
+
+
+
 app.get(
   "/posts/:id/edit",
   isLoggedIn,

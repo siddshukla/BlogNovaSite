@@ -68,7 +68,7 @@ body {
   position: relative;
   overflow: hidden;
   transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
-  max-height: 85vh; /* Limit height */
+  max-height: 100vh; /* Limit height */
   margin: 2rem auto; /* Center and add margin */
 }
 
@@ -144,7 +144,7 @@ body {
 form {
   display: flex;
   flex-direction: column;
-  gap: 0.7rem;
+  gap: 0.6rem;
 }
 
 .form-group {
