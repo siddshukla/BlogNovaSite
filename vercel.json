@@ -7,6 +7,14 @@
     }
   ],
   "routes": [
-    { "src": "/(.*)", "dest": "app.js" }
-  ]
+    {
+      "src": "/(.*)",
+      "dest": "app.js"
+    }
+  ],
+  "env": {
+    "MONGO_URL": "@mongo_url",
+    "SESSION_SECRET": "@session_secret",
+    "NODE_ENV": "production"
+  }
 }
