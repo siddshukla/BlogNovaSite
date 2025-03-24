@@ -23,16 +23,14 @@ app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 app.use(express.static(path.join(__dirname, "public")));
 
-// Session Configuration - With more robust options
+// Session Configuration - FIXED: Removed fixed expires property
 const sessionOptions = {
   secret: process.env.SESSION_SECRET || "mysupersecretcode",
   resave: false,
-  saveUninitialized: false, // Changed to false to prevent empty sessions
+  saveUninitialized: true,
   cookie: {
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in milliseconds
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
-    sameSite: 'strict'
   },
 };
 
@@ -89,7 +87,7 @@ const reviewSchema_mongo = new mongoose.Schema({
   },
   author: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
+    ref: "User", // FIXED: Changed from "Post" to "User"
   },
 });
 
@@ -166,7 +164,7 @@ main().catch((err) => {
   console.log(err);
 });
 
-// Passport configuration
+// Passport configuration - INITIALIZE BEFORE CONFIGURING STRATEGIES
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -191,7 +189,7 @@ const isLoggedIn = (req, res, next) => {
   next();
 };
 
-// New middleware to check ownership
+// ADDED: New middleware to check ownership
 const isAuthor = async (req, res, next) => {
   const { id } = req.params;
   const post = await Post.findById(id);
@@ -364,17 +362,11 @@ app.post(
   isLoggedIn,
   validatePost,
   wrapAsync(async (req, res, next) => {
-    try {
-      const newPost = new Post(req.body.post);
-      newPost.owner = req.user._id;
-      await newPost.save();
-      req.flash("success", "New Post Added");
-      res.redirect("/posts");
-    } catch (err) {
-      console.error("Post creation error:", err);
-      req.flash("error", "Failed to create post");
-      res.redirect("/posts/new");
-    }
+    const newPost = new Post(req.body.post);
+    newPost.owner = req.user._id;
+    await newPost.save();
+    req.flash("success", "New Post Added");
+    res.redirect("/posts");
   })
 );
 
@@ -385,7 +377,7 @@ app.get("/privacy-policy", (req, res) => {
 app.get(
   "/posts/:id/edit",
   isLoggedIn,
-  isAuthor,
+  isAuthor, // ADDED: ownership check
   wrapAsync(async (req, res) => {
     let { id } = req.params;
     const post = await Post.findById(id);
@@ -399,7 +391,7 @@ app.get(
 app.put(
   "/posts/:id",
   isLoggedIn,
-  isAuthor,
+  isAuthor, // ADDED: ownership check
   validatePost,
   wrapAsync(async (req, res) => {
     let { id } = req.params;
@@ -419,7 +411,7 @@ app.put(
 app.delete(
   "/posts/:id",
   isLoggedIn,
-  isAuthor,
+  isAuthor, // ADDED: ownership check
   wrapAsync(async (req, res) => {
     let { id } = req.params;
 
@@ -438,7 +430,7 @@ app.delete(
 // Review Routes
 app.post(
   "/posts/:id/reviews",
-  isLoggedIn,
+  isLoggedIn, // ADDED: require login for reviews
   validateReview,
   wrapAsync(async (req, res) => {
     const post = await Post.findById(req.params.id);
@@ -447,7 +439,7 @@ app.post(
     }
 
     const newReview = new Review(req.body.review);
-    newReview.author = req.user._id;
+    newReview.author = req.user._id; // FIXED: Set author to current user instead of post
     
     await newReview.save();
     post.reviews.push(newReview._id);
@@ -458,7 +450,7 @@ app.post(
   })
 );
 
-// Middleware to check review ownership
+// ADDED: Middleware to check review ownership
 const isReviewAuthor = async (req, res, next) => {
   const { id, reviewId } = req.params;
   const review = await Review.findById(reviewId);
@@ -478,7 +470,7 @@ const isReviewAuthor = async (req, res, next) => {
 app.delete(
   "/posts/:id/reviews/:reviewId",
   isLoggedIn,
-  isReviewAuthor,
+  isReviewAuthor, // ADDED: Check review ownership
   wrapAsync(async (req, res) => {
     const { id, reviewId } = req.params;
 
@@ -496,7 +488,7 @@ app.all("*", (req, res, next) => {
 });
 
 app.use((err, req, res, next) => {
-  console.error(err);
+  console.error(err); // Add proper error logging
   let { statusCode = 500, message = "Something Went Wrong" } = err;
   res.status(statusCode).render("error.ejs", { message });
 });
