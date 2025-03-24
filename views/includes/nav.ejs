@@ -1,0 +1,288 @@
+<header>
+  <nav class="nav-container">
+    <!-- Logo -->
+    <a href="/" class="logo"><img src="/images/BLOGnova.png" alt="BLOGnova"></a>
+    
+    <!-- Navigation Links -->
+    <div class="nav-menu">
+      <ul class="nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/posts">Blog</a></li>
+        <li><a href="/about">About</a></li>
+        <li><a href="/contact">Contact</a></li>
+        <!-- Mobile Auth Buttons - Only visible on mobile -->
+      <div class="mobile-auth">
+        <% if(!currUser){ %>
+          <a href="/login" class="auth-btn login">
+            <i class="fa-solid fa-right-to-bracket"></i>
+            <span>Login</span>
+          </a>
+          <a href="/signup" class="auth-btn signup">
+            <i class="fa-solid fa-user-plus"></i>
+            <span>Sign Up</span>
+          </a>
+        <% } else { %>
+          <a href="/logout" class="auth-btn logout">
+            <i class="fa-solid fa-sign-out-alt"></i>
+            <span>Log out</span>
+          </a>
+        <% } %>
+      </div>
+      </ul>
+      
+      
+    </div>
+    
+    <!-- Desktop Auth Buttons - Only visible on desktop -->
+    <div class="desktop-auth">
+      <% if(!currUser){ %>
+        <a href="/login" class="auth-btn login">
+          <i class="fa-solid fa-right-to-bracket"></i>
+          <span>Login</span>
+        </a>
+        <a href="/signup" class="auth-btn signup">
+          <i class="fa-solid fa-user-plus"></i>
+          <span>Sign Up</span>
+        </a>
+      <% } else { %>
+        <a href="/logout" class="auth-btn logout">
+          <i class="fa-solid fa-sign-out-alt"></i>
+          <span>Log out</span>
+        </a>
+      <% } %>
+    </div>
+    
+    <!-- Hamburger Menu -->
+    <div class="hamburger">
+      <span class="bar"></span>
+      <span class="bar"></span>
+      <span class="bar"></span>
+    </div>
+  </nav>
+</header>
+
+<style>
+  /* Authentication Button Styling - Login & Signup Only */
+
+/* Container for auth buttons */
+.desktop-auth, .mobile-auth {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.desktop-auth {
+  margin-left: 15px;
+}
+
+.mobile-auth {
+  width: 100%;
+  margin-top: 20px;
+  flex-direction: column;
+  display: none; /* Hide on desktop by default */
+}
+
+/* Base styles for auth buttons */
+.auth-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: 0.5px;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.auth-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+}
+
+.auth-btn:active {
+  transform: translateY(0);
+}
+
+/* Login button styling */
+.auth-btn.login {
+  background-color: #ffffff;
+  color: #3d5af1;
+  border: 2px solid #3d5af1;
+}
+
+.auth-btn.login:hover {
+  background-color: #f0f4ff;
+}
+
+.auth-btn.login i {
+  color: #3d5af1;
+}
+
+/* Signup button styling - with gradient */
+.auth-btn.signup {
+  background: linear-gradient(135deg, #3d5af1 0%, #7f4ce3 100%);
+  color: white;
+  border: none;
+}
+
+.auth-btn.signup:hover {
+  background: linear-gradient(135deg, #4565ff 0%, #8e5df0 100%);
+}
+
+.auth-btn.signup:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0) 100%);
+  transition: all 0.6s;
+  z-index: -1;
+}
+
+.auth-btn.signup:hover:before {
+  left: 100%;
+}
+
+/* Logout button styling */
+.auth-btn.logout {
+  background-color: #f5f5f5;
+  color: #555;
+  border: 1px solid #ddd;
+}
+
+.auth-btn.logout:hover {
+  background-color: #ebebeb;
+  color: #333;
+}
+
+/* Mobile-specific auth button styling */
+@media (max-width: 768px) {
+  .desktop-auth {
+    display: none !important; /* Force hide desktop auth on mobile */
+  }
+  
+  .mobile-auth {
+    display: flex !important; /* Force show mobile auth on mobile */
+  }
+  
+  .mobile-auth .auth-btn {
+    width: 80%;
+    justify-content: center;
+    padding: 12px 20px;
+  }
+  
+  .auth-btn i {
+    font-size: 16px;
+  }
+  
+  .auth-btn span {
+    font-size: 15px;
+  }
+}
+
+/* Button entrance animation */
+@keyframes buttonEntrance {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.auth-btn {
+  animation: buttonEntrance 0.4s ease-out forwards;
+}
+
+.auth-btn.login {
+  animation-delay: 0.1s;
+}
+
+.auth-btn.signup {
+  animation-delay: 0.2s;
+}
+
+/* Hamburger menu styles */
+.hamburger {
+  display: none;
+  cursor: pointer;
+}
+
+.bar {
+  display: block;
+  width: 25px;
+  height: 3px;
+  margin: 5px auto;
+  transition: all 0.3s ease-in-out;
+  background-color: #333;
+}
+
+@media (max-width: 768px) {
+  .hamburger {
+    display: block;
+  }
+  
+  .hamburger.active .bar:nth-child(2) {
+    opacity: 0;
+  }
+  
+  .hamburger.active .bar:nth-child(1) {
+    transform: translateY(8px) rotate(45deg);
+  }
+  
+  .hamburger.active .bar:nth-child(3) {
+    transform: translateY(-8px) rotate(-45deg);
+  }
+}
+</style>
+
+<script>
+  // JavaScript for hamburger menu functionality
+  document.addEventListener('DOMContentLoaded', function() {
+    const hamburger = document.querySelector('.hamburger');
+    const navMenu = document.querySelector('.nav-menu');
+    const desktopAuth = document.querySelector('.desktop-auth');
+    const mobileAuth = document.querySelector('.mobile-auth');
+    
+    // Check if mobile view and hide/show appropriate auth buttons immediately
+    function checkMobileView() {
+      if (window.innerWidth <= 768) {
+        desktopAuth.style.display = 'none';
+        mobileAuth.style.display = 'flex';
+      } else {
+        desktopAuth.style.display = 'flex';
+        mobileAuth.style.display = 'none';
+      }
+    }
+    
+    // Run on page load
+    checkMobileView();
+    
+    // Run on window resize
+    window.addEventListener('resize', checkMobileView);
+    
+    hamburger.addEventListener('click', function() {
+      hamburger.classList.toggle('active');
+      navMenu.classList.toggle('active');
+    });
+    
+    // Close menu when link is clicked
+    document.querySelectorAll('.nav-links a').forEach(link => {
+      link.addEventListener('click', function() {
+        hamburger.classList.remove('active');
+        navMenu.classList.remove('active');
+      });
+    });
+  });
+</script>

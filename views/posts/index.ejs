@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A beautiful and engaging blog with stunning UI/UX design">
+  <title><%= typeof title !== 'undefined' ? title : 'All Posts - BlogNova' %></title>
+  
+  <!-- Favicon -->
+  <link rel="icon" href="/images/Logo.png">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;700&display=swap" rel="stylesheet">
+  
+  <!-- CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+  <link rel="stylesheet" href="/css/styles.css">
+  <link rel="stylesheet" href="style/style.css">
+  
+</head>
+
+
+<body>
+  <%= success %>
+  <!-- Header with Navigation -->
+  <%- include('../includes/nav.ejs') %>
+  <%- include('../includes/bgDesign.ejs') %>
+  <!-- Main Content -->
+  <main>
+    <div class="content-container hero">
+      <h1 class="page-title accent">All Posts</h1>
+      
+      <form action="/posts/new" method="get">
+        <button class="create-post-btn">Create New Post</button>
+      </form>
+      
+      <% if(allPosts && allPosts.length > 0) { %>
+        <ul class="posts-list">
+          <% for(let post of allPosts) { %>
+            <li class="post-item">
+              <a href="/posts/<%= post._id %>" class="post-link">
+                <h3 class="post-title"><%= post.title %></h3>
+                <p class="post-author">By <strong><%= post.name %></strong></p>
+                <% if(post.excerpt) { %>
+                  <p class="post-excerpt"><%= post.excerpt %></p>
+                <% } %>
+              </a>
+              <a href="/posts/<%= post._id %>" class="show-more-btn">Show More</a> 
+
+              <div class="post-full-content" id="content-<%= post._id %>">
+                <%= post.content %>
+              </div>
+            </li>
+          <% } %>
+        </ul>
+      <% } else { %>
+        <div class="empty-state">
+          <p>No posts found. Be the first to create a post!</p>
+          <a href="/posts/new" class="create-post-btn">Create New Post</a>
+        </div>
+      <% } %>
+    </div>
+  </main>
+
+  <!-- Footer -->
+    <%- include('../includes/footer.ejs') %>
+
+
+  <!-- JavaScript -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
+  <script src="/scripts/script.js"></script>
+</body>
+</html>

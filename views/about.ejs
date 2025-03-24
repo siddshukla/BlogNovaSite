@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="About BlogNova - Learn more about our team and mission">
+  <title><%= typeof title !== 'undefined' ? title : 'About Us - BlogNova' %></title>
+  
+  <!-- Favicon -->
+  <link rel="icon" href="/images/Logo.png">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;700&display=swap" rel="stylesheet">
+  
+  <!-- CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+  <link rel="stylesheet" href="/css/styles.css">
+  
+  <link rel="stylesheet" href="/style/style.css">
+</head>
+
+<body>
+  <!-- Header with Navigation -->
+  <%- include('./includes/nav.ejs') %>
+  <%- include('./includes/bgDesign.ejs') %>
+  <!-- Main Content -->
+  <main>
+    <div class="content-container">
+      <section class="about-section">
+        <div class="about-header">
+          <h1>About Us</h1>
+          <p>We are a passionate team of writers, editors, and creatives dedicated to delivering high-quality content that informs, inspires, and engages our readers.</p>
+        </div>
+        
+        <div class="mission-vision">
+          <div class="mission-card">
+            <h2>Our Mission</h2>
+            <p>At BlogNova, our mission is to create a platform where knowledge meets creativity. We strive to deliver content that not only informs but also inspires our readers to think differently and explore new ideas.</p>
+            <p>We believe in the power of words to transform perspectives and create meaningful conversations around topics that matter.</p>
+          </div>
+          
+          <div class="vision-card">
+            <h2>Our Vision</h2>
+            <p>We envision BlogNova as a leading digital publication that sets new standards for quality content creation and distribution. We aim to build a global community of engaged readers who value authenticity, creativity, and intellectual curiosity.</p>
+            <p>Through our commitment to excellence, we aspire to become a trusted source of information and inspiration.</p>
+          </div>
+        </div>
+      </section>
+      
+      <section class="values-section">
+        <h2>Our Core Values</h2>
+        <div class="values-container">
+          <div class="value-card">
+            <div class="value-icon">
+              <i class="fas fa-check-circle"></i>
+            </div>
+            <h3>Quality</h3>
+            <p>We are committed to producing content of the highest quality, backed by thorough research and thoughtful analysis.</p>
+          </div>
+          
+          <div class="value-card">
+            <div class="value-icon">
+              <i class="fas fa-lightbulb"></i>
+            </div>
+            <h3>Creativity</h3>
+            <p>We approach each topic with fresh perspectives and innovative ideas, pushing the boundaries of conventional thinking.</p>
+          </div>
+          
+          <div class="value-card">
+            <div class="value-icon">
+              <i class="fas fa-heart"></i>
+            </div>
+            <h3>Authenticity</h3>
+            <p>We believe in being genuine, transparent, and true to our voice in everything we create and share.</p>
+          </div>
+          
+          <div class="value-card">
+            <div class="value-icon">
+              <i class="fas fa-users"></i>
+            </div>
+            <h3>Community</h3>
+            <p>We value the connections we build with our readers and strive to foster meaningful engagement and dialogue.</p>
+          </div>
+        </div>
+      </section>
+      
+      <section class="team-section">
+        <h2>Meet Our Team</h2>
+        <div class="team-grid">
+          <div class="team-member">
+            <div class="member-img">
+              <img src="/images/shivangi.jpg" alt="Team Member">
+            </div>
+            <div class="member-info">
+              <h3>Shivangi Saraf</h3>
+              <p class="position">Backend Developer</p>
+              <p>A skilled backend developer with strong expertise in <b>Node.js, Express.js, and MongoDB</b>. She has built projects using these technologies. With a solid grasp of <b>authentication, database management, and API development</b>, she ensures efficient backend systems. </p>
+              <div class="member-social">
+                <a href="https://github.com/shivangisaraf" aria-label="Twitter"><i class="fab fa-github"></i></a>
+                <a href="https://www.linkedin.com/in/shivangi-saraf-b633a1246/" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+              </div>
+            </div>
+          </div>
+          
+          <div class="team-member">
+            <div class="member-img">
+              <img src="/images/sidd.jpg" alt="Team Member">
+            </div>
+            <div class="member-info">
+              <h3>Siddharth Shukla</h3>
+              <p class="position">Frontend Developer</p>
+              <p> A skilled frontend developer proficient in HTML, CSS, JavaScript, and React.js, focused on creating responsive and user-friendly interfaces.</p>
+              <div class="member-social">
+                <a href="https://github.com/siddshukla" aria-label="Twitter"><i class="fab fa-github"></i></a>
+                <a href="https://www.linkedin.com/in/siddharth-shukla-811302272/" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <%- include('./includes/footer.ejs') %>
+
+
+  <!-- JavaScript -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
+  <script src="/scripts/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BlogNova - Login Experience</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="/style/style.css">
+  <link rel="stylesheet" href="/style/loginSignup.css">
+  
+  <style>
+    .alert {
+      padding: 10px 15px;
+      margin-bottom: 15px;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+    
+    .alert-error {
+      background-color: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+  </style>
+</head>
+<body>
+  <%- include('../includes/nav.ejs') %>
+  <%- include('../includes/bgDesign.ejs') %>
+  
+  <div class="parallax-container">
+    
+    
+    <!-- Foreground Layer -->
+    <div class="parallax-layer parallax-layer-base">
+      <section class="login-section">
+        <div class="login-container">
+          <div class="login-header">
+            <h2>Welcome Back</h2>
+            <p>Sign in to continue your journey</p>
+          </div>
+          
+          <!-- Add error message display -->
+          <% if(error && error.length) { %>
+          <div class="alert alert-error">
+            <i class="fa-solid fa-circle-exclamation"></i> <%= error %>
+          </div>
+          <% } %>
+          
+          <form action="/login" method="post">
+            <div class="form-group">
+              <label for="username">Username</label>
+              <div class="input-container">
+                <input type="text" id="username" name="username" class="form-control" placeholder="Enter your username" required>
+                <i class="fa-solid fa-user input-icon"></i>
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label for="password">Password</label>
+              <div class="input-container">
+                <input type="password" id="password" name="password" class="form-control" placeholder="Enter your password" required>
+                <i class="fa-solid fa-lock input-icon"></i>
+                <i class="fa-solid fa-eye password-toggle" id="password-toggle"></i>
+              </div>
+            </div>
+            
+            <button type="submit" class="btn-login">Sign In</button>
+            
+            <div class="login-options">
+              <label class="remember-me">
+                <input type="checkbox" name="remember"> Remember me
+              </label>
+            </div>
+            
+            <div class="separator">
+              <span>or</span>
+            </div>
+            
+            <div class="social-login">
+              <button type="button" class="social-btn">
+                <i class="fab fa-google"></i>
+              </button>
+              <button type="button" class="social-btn">
+                <i class="fab fa-facebook-f"></i>
+              </button>
+              <button type="button" class="social-btn">
+                <i class="fab fa-apple"></i>
+              </button>
+            </div>
+            <div class="login-link">
+              Don't have an account? <a href="/signup">Sign up</a>
+            </div>
+          </form>
+        </div>
+      </section>
+      
+      
+    </div>
+  </div>
+  <!-- Footer -->
+  <footer>
+    <div class="footer-container">
+      <div class="footer-column">
+        <h3>About Us</h3>
+        <p>We are passionate about creating and sharing high-quality content that informs, inspires, and engages our readers.</p>
+      </div>
+      
+      <div class="footer-column">
+        <h3>Quick Links</h3>
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/posts">Blog</a></li>
+          <li><a href="/about">About</a></li>
+          <li><a href="/contact">Contact</a></li>
+          <li><a href="/privacy-policy">Privacy Policy</a></li>
+        </ul>
+      </div>
+      
+      <div class="footer-column">
+        <h3>Connect With Us</h3>
+        <p>Follow us on social media and subscribe to our newsletter.</p>
+        <div class="social-links">
+          <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+          <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+          <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+        </div>
+      </div>
+    </div>
+    
+    <div class="copyright">
+      <p>&copy; <%= new Date().getFullYear() %> BlogNova. All Rights Reserved.</p>
+    </div>
+  </footer>
+
+ 
+  <script>
+    // Password visibility toggle
+    document.addEventListener('DOMContentLoaded', function() {
+      const passwordToggle = document.getElementById('password-toggle');
+      const passwordField = document.getElementById('password');
+      
+      if (passwordToggle && passwordField) {
+        passwordToggle.addEventListener('click', function() {
+          const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+          passwordField.setAttribute('type', type);
+          this.classList.toggle('fa-eye');
+          this.classList.toggle('fa-eye-slash');
+        });
+      }
+    });
+  </script>
+    <script src="/scripts/script.js"></script>
+
+</body>
+</html>

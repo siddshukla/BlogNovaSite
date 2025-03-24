@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Contact BlogNova - Get in touch with us for inquiries and feedback">
+  <title><%= typeof title !== 'undefined' ? title : 'Contact Us - BlogNova' %></title>
+  
+  <!-- Favicon -->
+  <link rel="icon" href="/images/Logo.png">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;700&display=swap" rel="stylesheet">
+  
+  <!-- CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+  <link rel="stylesheet" href="/css/styles.css">
+  <link rel="stylesheet" href="/style/style.css">
+  
+</head>
+
+<body>
+  <!-- Header with Navigation -->
+  <%- include('./includes/nav.ejs') %>
+  <%- include('./includes/bgDesign.ejs') %>
+  <!-- Main Content -->
+  <main>
+    <div class="content-container">
+      <h1 class="page-title">Contact Us</h1>
+      <p class="page-subtitle">We'd love to hear from you! Whether you have a question, feedback, or want to collaborate, feel free to reach out to us using the form below or through our contact information.</p>
+      
+      <div class="contact-container">
+        <div class="contact-info">
+          <h2>Get In Touch</h2>
+          <p>Have questions or comments? We're here to help and would love to hear from you. Feel free to contact us using any of the methods below.</p>
+          
+          <div class="contact-details">
+            <div class="contact-item">
+              <div class="contact-icon">
+                <i class="fas fa-map-marker-alt"></i>
+              </div>
+              <div class="contact-text">
+                <h3>Our Location</h3>
+                <p>Bhubaneswar, Odisha, India </p>
+              </div>
+            </div>
+            
+            <div class="contact-item">
+              <div class="contact-icon">
+                <i class="fas fa-envelope"></i>
+              </div>
+              <div class="contact-text">
+                <h3>Email Us</h3>
+                <p>blognova158@gmail.com</p>
+               
+              </div>
+            </div>
+            
+            <div class="contact-item">
+              <div class="contact-icon">
+                <i class="fas fa-phone-alt"></i>
+              </div>
+              <div class="contact-text">
+                <h3>Call Us</h3>
+                <p>+91 8604494386</p>
+                <p>Mon-Fri: 9:00 AM - 5:00 PM</p>
+              </div>
+            </div>
+            
+          </div>
+        </div>
+        
+        <div class="contact-form">
+          <h2>Send Us a Message</h2>
+          <form>
+            <div class="form-group">
+              <label for="name">Your Name</label>
+              <input type="text" id="name" name="name" class="form-control" required>
+            </div>
+            
+            <div class="form-group">
+              <label for="email">Email Address</label>
+              <input type="email" id="email" name="email" class="form-control" required>
+            </div>
+            
+            <div class="form-group">
+              <label for="subject">Subject</label>
+              <input type="text" id="subject" name="subject" class="form-control" required>
+            </div>
+            
+            <div class="form-group">
+              <label for="message">Your Message</label>
+              <textarea id="message" name="message" class="form-control" required></textarea>
+            </div>
+            
+            <button type="submit" class="btn-submit" onclick="sendMail()">Send Message</button>
+          </form>
+        </div>
+      </div>
+      
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <%- include('./includes/footer.ejs') %>
+
+
+  <!-- JavaScript -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
+  <script src="/scripts/script.js"></script>
+  <script src="/scripts/contact.js"></script>
+  <script type="text/javascript"
+        src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js">
+  </script>
+  <script type="text/javascript">
+    (function(){
+        emailjs.init({
+          publicKey: "hHQpHT9Jnj1RH0kqi",
+        });
+    })();
+  </script>
+</body>
+</html>

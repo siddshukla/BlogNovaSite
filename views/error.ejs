@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>404 Error - Page Not Found</title>
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+    crossorigin="anonymous"
+  />
+  <link rel="icon" href="/images/Logo.png">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+    
+    :root {
+      --primary-color: #8c52ff;
+      --secondary-color: #ff3c82;
+      --tertiary-color: #00d9ff;
+      --text-color: #111;
+      --text-shadow: 0 0 8px rgba(140, 82, 255, 0.8);
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      background: linear-gradient(135deg, var(--primary-color) 0%, #6e30cc 100%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      font-family: 'Share Tech Mono', monospace;
+      overflow: hidden;
+      position: relative;
+    }
+    
+    /* Animated background particles */
+    .particles {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      z-index: 0;
+    }
+    
+    .particle {
+      position: absolute;
+      display: block;
+      pointer-events: none;
+      width: 7px;
+      height: 7px;
+      background-color: white;
+      box-shadow: 0 0 10px 2px rgba(255, 255, 255, 0.8);
+      border-radius: 50%;
+      animation: float 15s infinite ease-in-out;
+      opacity: 0.5;
+    }
+    
+    .particle:nth-child(1) { top: 20%; left: 10%; animation-delay: 0s; animation-duration: 25s; }
+    .particle:nth-child(2) { top: 70%; left: 50%; animation-delay: 2s; animation-duration: 28s; }
+    .particle:nth-child(3) { top: 30%; left: 80%; animation-delay: 4s; animation-duration: 20s; }
+    .particle:nth-child(4) { top: 10%; left: 30%; animation-delay: 6s; animation-duration: 18s; }
+    .particle:nth-child(5) { top: 50%; left: 20%; animation-delay: 8s; animation-duration: 22s; }
+    .particle:nth-child(6) { top: 80%; left: 30%; animation-delay: 10s; animation-duration: 15s; }
+    .particle:nth-child(7) { top: 40%; left: 90%; animation-delay: 12s; animation-duration: 24s; }
+    .particle:nth-child(8) { top: 90%; left: 70%; animation-delay: 14s; animation-duration: 23s; }
+    .particle:nth-child(9) { top: 60%; left: 60%; animation-delay: 16s; animation-duration: 19s; }
+    .particle:nth-child(10) { top: 20%; left: 40%; animation-delay: 18s; animation-duration: 16s; }
+    
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(0) translateX(0);
+        opacity: 0.5;
+      }
+      25% {
+        transform: translateY(-100px) translateX(50px);
+        opacity: 0.8;
+      }
+      50% {
+        transform: translateY(-50px) translateX(100px);
+        opacity: 0.6;
+      }
+      75% {
+        transform: translateY(-150px) translateX(-50px);
+        opacity: 0.9;
+      }
+    }
+    
+    .error-container {
+      position: relative;
+      text-align: center;
+      z-index: 10;
+      padding: 2rem;
+      max-width: 800px;
+    }
+    
+    .error-title {
+      font-size: 180px;
+      font-weight: 900;
+      color: var(--text-color);
+      margin-bottom: 0;
+      position: relative;
+      letter-spacing: -5px;
+      line-height: 0.9;
+    }
+    
+    /* Advanced glitch effect */
+    .glitch-wrapper {
+      position: relative;
+      display: inline-block;
+      margin-bottom: 20px; /* Space between 404 and NOT FOUND */
+      width: 100%; /* Make the wrapper full width for proper alignment */
+    }
+    
+    .glitch-text {
+      position: relative;
+      animation: glitch-skew 1s infinite linear alternate-reverse;
+    }
+    
+    .glitch-text::before,
+    .glitch-text::after {
+      content: attr(data-text);
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+    }
+    
+    .glitch-text::before {
+      color: var(--secondary-color);
+      animation: glitch-effect 5s infinite linear alternate-reverse;
+    }
+    
+    .glitch-text::after {
+      color: var(--tertiary-color);
+      animation: glitch-effect 7.5s infinite linear alternate-reverse;
+    }
+    
+    @keyframes glitch-effect {
+      0% {
+        transform: translate(-5px, 2px);
+        clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%, 0 55%, 100% 55%, 100% 100%, 0 100%);
+      }
+      10% {
+        transform: translate(5px, -2px);
+        clip-path: polygon(0 55%, 100% 55%, 100% 100%, 0 100%);
+      }
+      20% {
+        transform: translate(-3px, 1px);
+        clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+      }
+      30% {
+        transform: translate(3px, -1px);
+        clip-path: polygon(0 15%, 100% 15%, 100% 85%, 0 85%);
+      }
+      40% {
+        transform: translate(-1px, 3px);
+        clip-path: polygon(0 40%, 100% 40%, 100% 60%, 0 60%);
+      }
+      50% {
+        transform: translate(1px, -3px);
+        clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+      }
+      60% {
+        transform: translate(-3px, -1px);
+        clip-path: polygon(0 25%, 100% 25%, 100% 75%, 0 75%);
+      }
+      70% {
+        transform: translate(3px, 1px);
+        clip-path: polygon(0 60%, 100% 60%, 100% 100%, 0 100%);
+      }
+      80% {
+        transform: translate(-5px, -3px);
+        clip-path: polygon(0 0, 100% 0, 100% 40%, 0 40%);
+      }
+      90% {
+        transform: translate(5px, 3px);
+        clip-path: polygon(0 45%, 100% 45%, 100% 60%, 0 60%);
+      }
+      100% {
+        transform: translate(-5px, 2px);
+        clip-path: polygon(0 0, 100% 0, 100% 85%, 0 85%);
+      }
+    }
+    
+    @keyframes glitch-skew {
+      0% { transform: skew(0deg); }
+      20% { transform: skew(0.5deg); }
+      40% { transform: skew(-0.5deg); }
+      60% { transform: skew(0.25deg); }
+      80% { transform: skew(-0.25deg); }
+      100% { transform: skew(0deg); }
+    }
+    
+    .error-subtitle {
+      font-size: 70px;
+      font-weight: 900;
+      color: var(--text-color);
+      margin-top: 0;
+      margin-bottom: 20px;
+      position: relative;
+      letter-spacing: 5px;
+      text-transform: uppercase;
+      display: block; /* Ensure it's on its own line */
+    }
+    
+    .character-container {
+      position: relative;
+      width: 350px;
+      height: 350px;
+      margin: 0 auto;
+      perspective: 1000px;
+      transform-style: preserve-3d;
+    }
+    
+    .character {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transform-style: preserve-3d;
+      animation: character-float 4s ease-in-out infinite;
+    }
+    
+    @keyframes character-float {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-20px) rotate(2deg); }
+    }
+    
+    .sign {
+      position: relative;
+      background-color: white;
+      padding: 20px 40px;
+      border-radius: 10px;
+      font-size: 42px;
+      font-weight: bold;
+      color: #772222;
+      display: inline-block;
+      box-shadow: 
+        0 10px 25px rgba(0, 0, 0, 0.2),
+        0 0 15px rgba(255, 255, 255, 0.8),
+        inset 0 0 15px rgba(255, 255, 255, 0.5);
+      transform: rotate(-3deg);
+      animation: sign-glow 2s ease-in-out infinite alternate;
+    }
+    
+    @keyframes sign-glow {
+      0% { box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2), 0 0 15px rgba(255, 255, 255, 0.8), inset 0 0 15px rgba(255, 255, 255, 0.5); }
+      100% { box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2), 0 0 25px rgba(140, 82, 255, 0.8), inset 0 0 20px rgba(140, 82, 255, 0.5); }
+    }
+    
+    .scanlines {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 15;
+      opacity: 0.15;
+      background: linear-gradient(
+        to bottom,
+        rgba(255, 255, 255, 0) 50%,
+        rgba(0, 0, 0, 0.5) 51%
+      );
+      background-size: 100% 4px;
+      animation: scanlines 0.2s linear infinite;
+    }
+    
+    @keyframes scanlines {
+      0% { background-position: 0 0; }
+      100% { background-position: 0 4px; }
+    }
+    
+    .noise::before {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      content: "";
+      opacity: 0.05;
+      z-index: 20;
+      pointer-events: none;
+      background-image: url("data:image/png;base64,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");
+      animation: noise 0.2s linear infinite;
+    }
+    
+    @keyframes noise {
+      0% { background-position: 0 0; }
+      100% { background-position: 100% 100%; }
+    }
+    
+    /* Flicker animation */
+    .flicker {
+      animation: flicker 4s linear infinite;
+    }
+    
+    @keyframes flicker {
+      0%, 19.999%, 22%, 62.999%, 64%, 64.999%, 70%, 100% {
+        opacity: 1;
+      }
+      20%, 21.999%, 63%, 63.999%, 65%, 69.999% {
+        opacity: 0.33;
+      }
+    }
+    
+    /* Extra details for an ultra-modern look */
+    .back-circle {
+      position: absolute;
+      width: 500px;
+      height: 500px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(140,82,255,0) 70%);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: -1;
+      filter: blur(20px);
+      animation: pulse 4s ease-in-out infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.3; }
+      50% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.5; }
+    }
+    
+    /* Stylish button */
+    .home-button {
+      margin-top: 30px;
+      position: relative;
+      padding: 15px 30px;
+      background: transparent;
+      color: white;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 18px;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      border: 2px solid white;
+      border-radius: 4px;
+      cursor: pointer;
+      overflow: hidden;
+      transition: all 0.3s;
+      z-index: 1;
+    }
+    
+    .home-button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 0%;
+      height: 100%;
+      background-color: white;
+      transition: all 0.3s;
+      z-index: -1;
+    }
+    
+    .home-button:hover {
+      color: var(--primary-color);
+    }
+    
+    .home-button:hover::before {
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <%- include('./includes/bgDesign.ejs') %> <!-- Include the animated background -->
+  <!-- Animated particles -->
+  <div class="particles">
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+  </div>
+  
+  <!-- Pulsing background circle -->
+  <div class="back-circle"></div>
+  
+  <div class="error-container">
+    <!-- 404 Title with glitch effect -->
+    <div class="glitch-wrapper">
+      <h1 class="error-title flicker">
+        <span class="glitch-text" data-text="404">404</span>
+      </h1>
+    </div>
+    
+    <!-- NOT FOUND on separate line with glitch effect -->
+    <div class="glitch-wrapper">
+      <h2 class="error-subtitle flicker">
+        <span class="glitch-text" data-text="NOT FOUND">NOT FOUND</span>
+      </h2>
+    </div>
+    
+    <div class="character-container">
+      <div class="character">
+        <svg width="300" height="300" viewBox="0 0 300 300">
+          <!-- Body - yellow shirt -->
+          <rect x="120" y="180" width="60" height="80" fill="#ffcc80" rx="5" />
+          
+          <!-- Face/Head - light pink -->
+          <circle cx="150" cy="140" r="50" fill="#ffb6c1" />
+          
+          <!-- Hair - reddish brown -->
+          <path d="M100 140 Q130 70 180 110 Q200 80 220 130" stroke="#e57373" stroke-width="12" fill="#e57373" />
+          <path d="M150 90 Q160 80 160 95" stroke="#e57373" stroke-width="4" fill="none" />
+          
+          <!-- Eyes -->
+          <ellipse cx="135" cy="130" rx="5" ry="6" fill="#333" />
+          <ellipse cx="165" cy="130" rx="5" ry="6" fill="#333" />
+          
+          <!-- Eyebrows - surprised look -->
+          <path d="M130 120 Q135 115 140 120" stroke="#333" stroke-width="2" fill="none" />
+          <path d="M160 120 Q165 115 170 120" stroke="#333" stroke-width="2" fill="none" />
+          
+          <!-- Arms holding sign - improved positioning -->
+          <rect x="95" y="190" width="25" height="15" fill="#ffcc80" rx="5" />
+          <rect x="180" y="190" width="25" height="15" fill="#ffcc80" rx="5" />
+          
+          <!-- Improved hands with more detailed anatomy -->
+          <!-- Left hand -->
+          <circle cx="90" cy="198" r="10" fill="#ffb6c1" />
+          <!-- Left hand fingers -->
+          <path d="M85 193 Q80 190 83 187" stroke="#ffb6c1" stroke-width="4" fill="#ffb6c1" />
+          <path d="M83 197 Q78 196 80 193" stroke="#ffb6c1" stroke-width="4" fill="#ffb6c1" />
+          <path d="M82 201 Q77 202 79 205" stroke="#ffb6c1" stroke-width="4" fill="#ffb6c1" />
+          <path d="M88 204 Q86 208 83 207" stroke="#ffb6c1" stroke-width="4" fill="#ffb6c1" />
+          
+          <!-- Right hand -->
+          <circle cx="210" cy="198" r="10" fill="#ffb6c1" />
+          <!-- Right hand fingers -->
+          <path d="M215 193 Q220 190 217 187" stroke="#ffb6c1" stroke-width="4" fill="#ffb6c1" />
+          <path d="M217 197 Q222 196 220 193" stroke="#ffb6c1" stroke-width="4" fill="#ffb6c1" />
+          <path d="M218 201 Q223 202 221 205" stroke="#ffb6c1" stroke-width="4" fill="#ffb6c1" />
+          <path d="M212 204 Q214 208 217 207" stroke="#ffb6c1" stroke-width="4" fill="#ffb6c1" />
+          
+          <!-- Sign - white with brown text -->
+          <rect x="80" y="150" width="140" height="60" fill="white" rx="5" stroke="#333" stroke-width="2" />
+          <text x="150" y="190" font-family="Arial" font-size="28" fill="#772222" text-anchor="middle" font-weight="bold">Oops!</text>
+        </svg>
+      </div>
+    </div>
+    
+    <button class="home-button" onclick="window.location.href='/'">Return Home</button>
+  </div>
+  
+  <!-- Scanline effect overlay -->
+  <div class="scanlines"></div>
+  
+  <!-- Film grain noise overlay -->
+  <div class="noise"></div>
+</body>
+</html>

@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BlogNova - Signup Experience</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="/style/style.css">
+  <link rel="stylesheet" href="/style/loginSignup.css">
+  
+</head>
+<body>
+  <%- include('../includes/nav.ejs') %>
+  <%- include('../includes/bgDesign.ejs') %>
+  
+  <div class="parallax-container">
+    
+    <!-- Foreground Layer -->
+    <div class="parallax-layer parallax-layer-base">
+      <section class="signup-section">
+        <div class="signup-container">
+          <div class="signup-header">
+            <h2>Join BlogNova</h2>
+            <p>Create an account to start your journey</p>
+          </div>
+          
+          <!-- Flash messages display -->
+          <% if(success && success.length) { %>
+            <div class="alert alert-success">
+              <%= success %>
+            </div>
+          <% } %>
+          
+          <% if(error && error.length) { %>
+            <div class="alert alert-danger">
+              <%= error %>
+            </div>
+          <% } %>
+          
+          <form action="/signup" method="post" id="signup-form">
+            <div class="form-group">
+              <label for="username">Username</label>
+              <div class="input-container">
+                <input type="text" id="username" name="username" class="form-control" placeholder="Choose a username" required>
+                <i class="fa-solid fa-user input-icon"></i>
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label for="email">Email</label>
+              <div class="input-container">
+                <input type="email" id="email" name="email" class="form-control" placeholder="Enter your email" required>
+                <i class="fa-solid fa-envelope input-icon"></i>
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label for="password">Password</label>
+              <div class="input-container">
+                <input type="password" id="password" name="password" class="form-control" placeholder="Create a password" required>
+                <i class="fa-solid fa-lock input-icon"></i>
+                <i class="fa-solid fa-eye password-toggle" id="password-toggle"></i>
+              </div>
+              <div id="password-requirements" class="password-requirements">
+                <p class="passValid requirements-title">Password must:</p>
+                <ul>
+                  <li class="passValid" id="capital-req"><i class="fa-solid fa-circle"></i> Start with a capital letter</li>
+                  <li class="passValid" id="lowercase-req"><i class="fa-solid fa-circle"></i> Include at least one lowercase letter</li>
+                  <li class="passValid" id="number-req"><i class="fa-solid fa-circle"></i> Include at least one number</li>
+                  <li class="passValid" id="special-req"><i class="fa-solid fa-circle"></i> Include at least one special character</li>
+                  <li class="passValid" id="length-req"><i class="fa-solid fa-circle"></i> Be at least 8 characters long</li>
+                </ul>
+              </div>
+            </div>
+            
+            <button type="submit" class="btn-signup" id="submit-btn">Create Account</button>
+            
+            <div class="separator">
+              <span>or</span>
+            </div>
+            <div class="login-link">
+              Already have an account? <a href="/login">Sign in</a>
+            </div>
+          </form>
+        </div>
+      </section>
+      
+    </div>
+  </div>
+  
+  <!-- Footer -->
+  <footer>
+    <div class="footer-container">
+      <div class="footer-column">
+        <h3>About Us</h3>
+        <p>We are passionate about creating and sharing high-quality content that informs, inspires, and engages our readers.</p>
+      </div>
+      
+      <div class="footer-column">
+        <h3>Quick Links</h3>
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/posts">Blog</a></li>
+          <li><a href="/about">About</a></li>
+          <li><a href="/contact">Contact</a></li>
+          <li><a href="/privacy-policy">Privacy Policy</a></li>
+        </ul>
+      </div>
+      
+      <div class="footer-column">
+        <h3>Connect With Us</h3>
+        <p>Follow us on social media and subscribe to our newsletter.</p>
+        <div class="social-links">
+          <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+          <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+          <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+        </div>
+      </div>
+    </div>
+    
+    <div class="copyright">
+      <p>&copy; <%= new Date().getFullYear() %> BlogNova. All Rights Reserved.</p>
+    </div>
+  </footer>
+
+  <style>
+    /* Flash message styles */
+    .alert {
+      padding: 12px 16px;
+      margin-bottom: 20px;
+      border-radius: 4px;
+      font-size: 0.95rem;
+    }
+    
+    .alert-success {
+      background-color: rgba(46, 204, 113, 0.15);
+      border-left: 4px solid #2ecc71;
+      color: #27ae60;
+    }
+    
+    .alert-danger {
+      background-color: rgba(231, 76, 60, 0.15);
+      border-left: 4px solid #e74c3c;
+      color: #c0392b;
+    }
+  </style>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Password visibility toggle
+      const passwordToggle = document.getElementById('password-toggle');
+      const passwordField = document.getElementById('password');
+      const form = document.getElementById('signup-form');
+      const submitBtn = document.getElementById('submit-btn');
+      
+      // Password requirement elements
+      const capitalReq = document.getElementById('capital-req');
+      const lowercaseReq = document.getElementById('lowercase-req');
+      const numberReq = document.getElementById('number-req');
+      const specialReq = document.getElementById('special-req');
+      const lengthReq = document.getElementById('length-req');
+      
+      // Add custom styles for password requirements
+      const style = document.createElement('style');
+      style.textContent = `
+        .password-requirements {
+          margin-top: 10px;
+          font-size: 0.85rem;
+          color: #666;
+        }
+        .password-requirements ul {
+          list-style-type: none;
+          padding-left: 5px;
+          margin-top: 5px;
+        }
+        .password-requirements li {
+          margin-bottom: 3px;
+        }
+        .password-requirements .requirements-title {
+          margin-bottom: 5px;
+          font-weight: bold;
+        }
+        .password-requirements i {
+          font-size: 0.75rem;
+          margin-right: 5px;
+        }
+        .requirement-met {
+          color: #2ecc71;
+        }
+        .requirement-met i:before {
+          content: "\\f058";
+        }
+      `;
+      document.head.appendChild(style);
+      
+      // Password visibility toggle
+      if (passwordToggle && passwordField) {
+        passwordToggle.addEventListener('click', function() {
+          const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+          passwordField.setAttribute('type', type);
+          this.classList.toggle('fa-eye');
+          this.classList.toggle('fa-eye-slash');
+        });
+      }
+      
+      // Check individual password requirements
+      function checkPasswordRequirements(password) {
+        const validations = {
+          capital: /^[A-Z]/.test(password),
+          lowercase: /[a-z]/.test(password),
+          number: /\d/.test(password),
+          special: /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password),
+          length: password.length >= 8
+        };
+        
+        // Update UI for each requirement
+        if (validations.capital) {
+          capitalReq.classList.add('requirement-met');
+        } else {
+          capitalReq.classList.remove('requirement-met');
+        }
+        
+        if (validations.lowercase) {
+          lowercaseReq.classList.add('requirement-met');
+        } else {
+          lowercaseReq.classList.remove('requirement-met');
+        }
+        
+        if (validations.number) {
+          numberReq.classList.add('requirement-met');
+        } else {
+          numberReq.classList.remove('requirement-met');
+        }
+        
+        if (validations.special) {
+          specialReq.classList.add('requirement-met');
+        } else {
+          specialReq.classList.remove('requirement-met');
+        }
+        
+        if (validations.length) {
+          lengthReq.classList.add('requirement-met');
+        } else {
+          lengthReq.classList.remove('requirement-met');
+        }
+        
+        // Return true if all requirements are met
+        return validations.capital && validations.lowercase && 
+               validations.number && validations.special && 
+               validations.length;
+      }
+      
+      // Live validation as user types
+      if (passwordField) {
+        passwordField.addEventListener('input', function() {
+          const password = this.value;
+          const allRequirementsMet = checkPasswordRequirements(password);
+          
+          // Optional: Visually indicate if password is valid
+          if (allRequirementsMet) {
+            passwordField.style.borderColor = '#2ecc71';
+          } else {
+            passwordField.style.borderColor = '';
+          }
+        });
+      }
+      
+      // Form submission validation
+      if (form) {
+        form.addEventListener('submit', function(e) {
+          const password = passwordField.value;
+          const allRequirementsMet = checkPasswordRequirements(password);
+          
+          if (!allRequirementsMet) {
+            e.preventDefault();
+            alert('Please ensure your password meets all the requirements.');
+          }
+        });
+      }
+    });
+  </script>
+  <script src="/scripts/script.js"></script>
+
+</body>
+</html>

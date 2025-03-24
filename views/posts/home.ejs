@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A beautiful and engaging blog with stunning UI/UX design">
+  <title><%= typeof title !== 'undefined' ? title : 'BlogNova' %></title>
+  
+  <!-- Favicon -->
+  <link rel="icon" href="/images/Logo.png">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;700&display=swap" rel="stylesheet">
+  
+  <!-- CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+  <link rel="stylesheet" href="/css/styles.css">
+  
+  <link rel="stylesheet" href="style/style.css">
+</head>
+
+<body>
+  <!-- Header with Navigation -->
+  <%- include('../includes/nav.ejs') %>
+  <%- include('../includes/bgDesign.ejs') %>
+
+
+  <!-- Main Content -->
+  <main>
+    <div class="content-container">
+     <!-- Hero Section -->
+<section class="hero">
+  <div class="hero-backdrop">
+    <div class="particle particle-1"></div>
+    <div class="particle particle-2"></div>
+    <div class="particle particle-3"></div>
+    <div class="particle particle-4"></div>
+    <div class="particle particle-5"></div>
+  </div>
+
+  <div class="hero-content">
+    <div class="logo-container">
+      <h1 class="animate__animated animate__fadeInUp blog">Blog<span class="accent nova">Nova</span></h1>
+      <div class="logo-glow"></div>
+    </div>
+    <p class="hero-tagline animate__animated animate__fadeInUp animate__delay-1s">Where Ideas Become Constellations</p>
+    <div class="hero-cta animate__animated animate__fadeInUp animate__delay-2s">
+      <a href="/posts" class="primary-btn">
+        <span class="btn-text">Explore Articles</span>
+        <span class="btn-icon">→</span>
+      </a>
+      
+    </div>
+  </div>
+  
+  <div class="hero-visual">
+    <div class="orbital-ring ring-1">
+      <div class="orbital-dot"></div>
+    </div>
+    <div class="orbital-ring ring-2">
+      <div class="orbital-dot"></div>
+    </div>
+    <div class="hero-image animate__animated animate__fadeIn animate__delay-2s">
+      <img src="/images/heroImg.png" alt="BlogNova Concept" />
+      <div class="image-overlay"></div>
+    </div>
+    <div class="floating-badges">
+      <div class="badge badge-1 animate__animated animate__fadeInRight animate__delay-3s">
+        <span class="badge-icon">🔥</span>
+        <span>Trending</span>
+      </div>
+      <div class="badge badge-2 animate__animated animate__fadeInLeft animate__delay-3s">
+        <span class="badge-icon">✨</span>
+        <span>New</span>
+      </div>
+      <div class="badge badge-3 animate__animated animate__fadeInUp animate__delay-3s">
+        <span class="badge-icon">📌</span>
+        <span>Featured</span>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<style>
+/* Hero Section Styles */
+
+:root {
+      --primary-color: #1f2d6f;
+      --primary-color-rgb: 67, 97, 238;
+      --secondary-color: #3a0ca3;
+      --accent-color: #f72585;
+      --accent-color-rgb: 247, 37, 133;
+      --text-color: #333;
+      --text-color-rgb: 51, 51, 51;
+      --background-color-rgb: 255, 255, 255;
+    }
+.hero {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  padding: 2rem 0;
+  overflow: hidden;
+}
+
+/* Hero Backdrop with Particles */
+.hero-backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.particle {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(1px);
+  animation: float-around 20s infinite ease-in-out;
+}
+
+.particle-1 {
+  top: 15%;
+  left: 10%;
+  width: 180px;
+  height: 180px;
+  animation-delay: 0s;
+  background: radial-gradient(circle at center, rgba(106, 17, 203, 0.2), transparent 70%);
+}
+
+.particle-2 {
+  top: 50%;
+  right: 15%;
+  width: 150px;
+  height: 150px;
+  animation-delay: 5s;
+  background: radial-gradient(circle at center, rgba(37, 117, 252, 0.15), transparent 70%);
+}
+
+.particle-3 {
+  bottom: 20%;
+  left: 20%;
+  width: 120px;
+  height: 120px;
+  animation-delay: 10s;
+  background: radial-gradient(circle at center, rgba(255, 82, 47, 0.1), transparent 70%);
+}
+
+.particle-4 {
+  top: 30%;
+  right: 30%;
+  width: 100px;
+  height: 100px;
+  animation-delay: 15s;
+  background: radial-gradient(circle at center, rgba(0, 242, 254, 0.1), transparent 70%);
+}
+
+.particle-5 {
+  bottom: 30%;
+  right: 10%;
+  width: 200px;
+  height: 200px;
+  animation-delay: 7.5s;
+  background: radial-gradient(circle at center, rgba(221, 36, 118, 0.08), transparent 70%);
+}
+
+@keyframes float-around {
+  0% { transform: translate(0, 0) rotate(0deg); }
+  25% { transform: translate(20px, -15px) rotate(5deg); }
+  50% { transform: translate(0, -25px) rotate(0deg); }
+  75% { transform: translate(-20px, -10px) rotate(-5deg); }
+  100% { transform: translate(0, 0) rotate(0deg); }
+}
+
+.hero-content {
+  position: relative;
+  z-index: 10;
+  text-align: center;
+  max-width: 800px;
+  margin: 4rem auto 2rem;
+  padding: 0 2rem;
+}
+
+.logo-container {
+  position: relative;
+  display: inline-block;
+  margin-bottom: 1rem;
+}
+
+.logo-glow {
+  position: absolute;
+  width: 120%;
+  height: 100%;
+  top: 0;
+  left: -10%;
+  background: radial-gradient(ellipse at center, rgba(146, 92, 239, 0.4) 0%, transparent 70%);
+  filter: blur(20px);
+  z-index: -1;
+  animation: pulse 4s infinite ease-in-out;
+}
+
+@keyframes pulse {
+  0% { opacity: 0.5; transform: scale(1); }
+  50% { opacity: 0.8; transform: scale(1.05); }
+  100% { opacity: 0.5; transform: scale(1); }
+}
+
+.hero h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  background: linear-gradient(135deg, #d0aef2 0%, #2c5bdb 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.hero h1 .accent {
+  position: relative;
+  background: linear-gradient(135deg, #5d309b 0%, #ef8585 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.hero h1 .accent::after {
+  content: '';
+  position: absolute;
+  bottom: 0.2rem;
+  left: 0;
+  width: 100%;
+  height: 0.3rem;
+  background: linear-gradient(90deg, #00f5a0, #00d9f5);
+  border-radius: 4px;
+  box-shadow: 0 2px 10px rgba(0, 217, 245, 0.5);
+}
+
+.hero-tagline {
+  font-size: 1.6rem;
+  margin-bottom: 2.5rem;
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 300;
+  letter-spacing: 1px;
+}
+
+.hero-cta {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.primary-btn, .secondary-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 0.85rem 1.7rem;
+  border-radius: 3rem;
+  font-weight: 500;
+  font-size: 1.1rem;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.primary-btn {
+  background: linear-gradient(45deg, #6e48aa, #9d50bb);
+  color: white;
+  border: none;
+}
+
+.primary-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: 0.5s;
+}
+
+.primary-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(106, 17, 203, 0.4);
+}
+
+.primary-btn:hover::before {
+  left: 100%;
+}
+
+.secondary-btn {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.secondary-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.btn-icon {
+  font-size: 1.2rem;
+  transition: transform 0.3s ease;
+}
+
+.primary-btn:hover .btn-icon {
+  transform: translateX(4px);
+}
+
+.secondary-btn:hover .btn-icon {
+  transform: rotate(30deg);
+}
+
+/* Hero Visual Elements */
+.hero-visual {
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1rem;
+  z-index: 5;
+}
+
+.orbital-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  z-index: 4;
+}
+
+.ring-1 {
+  width: 550px;
+  height: 550px;
+  animation: rotate 15s linear infinite;
+}
+
+.ring-2 {
+  width: 420px;
+  height: 420px;
+  animation: rotate 12s linear infinite reverse;
+}
+
+.orbital-dot {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: white;
+  border-radius: 50%;
+  box-shadow: 0 0 10px 2px rgba(255, 255, 255, 0.5);
+}
+
+.ring-1 .orbital-dot {
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.ring-2 .orbital-dot {
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.hero-image {
+  position: relative;
+  width: 500px;
+  height: 350px;
+  border-radius: 1.5rem;
+  overflow: hidden;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+  z-index: 5;
+}
+
+.hero-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.8s ease;
+}
+
+.hero-image:hover img {
+  transform: scale(1.08);
+}
+
+.image-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(106, 17, 203, 0.3) 0%, rgba(37, 117, 252, 0.3) 100%);
+  mix-blend-mode: overlay;
+}
+
+/* Floating Badges */
+.floating-badges {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 6;
+}
+
+.badge {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.2rem;
+  border-radius: 1.5rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: white;
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+  z-index: 6;
+  backdrop-filter: blur(8px);
+}
+
+.badge-icon {
+  font-size: 1.1rem;
+}
+
+.badge-1 {
+  top: 15%;
+  right: 36px;
+  background: linear-gradient(45deg, rgba(255, 81, 47, 0.9), rgba(221, 36, 118, 0.9));
+  transform: rotate(8deg);
+}
+
+.badge-2 {
+  top: 60%;
+  left: 13%;
+  background: linear-gradient(45deg, rgba(17, 153, 142, 0.9), rgba(56, 239, 125, 0.9));
+  transform: rotate(-5deg);
+}
+
+.badge-3 {
+  bottom: -10px;
+  right: 30%;
+  background: linear-gradient(45deg, rgba(79, 172, 254, 0.9), rgba(0, 242, 254, 0.9));
+  transform: rotate(3deg);
+}
+
+/* Scroll Indicator */
+.hero-scroll-indicator {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.7);
+  opacity: 0.8;
+  transition: opacity 0.3s ease;
+  z-index: 10;
+}
+
+.hero-scroll-indicator:hover {
+  opacity: 1;
+  color: white;
+}
+
+.scroll-icon {
+  width: 30px;
+  height: 50px;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-radius: 15px;
+  margin-bottom: 0.7rem;
+  position: relative;
+  transition: border-color 0.3s ease;
+}
+
+.hero-scroll-indicator:hover .scroll-icon {
+  border-color: white;
+}
+
+.scroll-wheel {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 6px;
+  height: 6px;
+  background: white;
+  border-radius: 50%;
+  animation: scrollWheel 2s infinite;
+}
+
+@keyframes scrollWheel {
+  0% { transform: translateX(-50%) translateY(0); opacity: 1; }
+  100% { transform: translateX(-50%) translateY(20px); opacity: 0; }
+}
+
+/* Mobile and Tablet Responsiveness */
+@media (max-width: 992px) {
+  .hero h1 {
+    font-size: 4.2rem;
+  }
+  
+  .hero-image {
+    width: 450px;
+    height: 315px;
+  }
+  
+  .ring-1 {
+    width: 480px;
+    height: 480px;
+  }
+  
+  .ring-2 {
+    width: 380px;
+    height: 380px;
+  }
+  
+  .particle-1, .particle-5 {
+    width: 150px;
+    height: 150px;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero-content {
+    margin: 2rem auto 1.5rem;
+  }
+  
+  .hero h1 {
+    font-size: 3.5rem;
+  }
+  
+  .hero-tagline {
+    font-size: 1.3rem;
+  }
+  
+  .hero-cta {
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+  
+  .primary-btn, .secondary-btn {
+    width: 225px;
+    padding: 0.75rem 1.2rem;
+    font-size: 1rem;
+  }
+  
+  .hero-image {
+    width: 90%;
+    height: 300px;
+  }
+  
+  .ring-1 {
+    width: 95%;
+    height: 400px;
+  }
+  
+  .ring-2 {
+    width: 85%;
+    height: 340px;
+  }
+  
+  .badge {
+    font-size: 0.8rem;
+    padding: 0.5rem 1rem;
+  }
+  
+  .badge-1 {
+    right: 5px;
+    top: 10%;
+  }
+  
+  .badge-2 {
+    left: 5px;
+  }
+  
+  .particle {
+    opacity: 0.6;
+  }
+}
+
+@media (max-width: 576px) {
+  .hero h1 {
+    font-size: 2.8rem;
+  }
+  
+  .hero-tagline {
+    font-size: 1.1rem;
+    margin-bottom: 1.8rem;
+  }
+  
+  .hero-image {
+    height: 250px;
+  }
+  
+  .ring-1 {
+    height: 320px;
+  }
+  
+  .ring-2 {
+    height: 280px;
+  }
+  
+  .badge {
+    font-size: 0.75rem;
+    padding: 0.4rem 0.8rem;
+  }
+  
+  .badge-icon {
+    font-size: 0.9rem;
+  }
+  
+  .particle-1, .particle-5 {
+    width: 100px;
+    height: 100px;
+  }
+  
+  .particle-2, .particle-3, .particle-4 {
+    width: 80px;
+    height: 80px;
+  }
+  
+  .hero-scroll-indicator {
+    font-size: 0.8rem;
+  }
+  
+  .scroll-icon {
+    width: 25px;
+    height: 40px;
+  }
+}
+</style>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <%- include('../includes/footer.ejs') %>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <!-- JavaScript -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
+  <script src="scripts/script.js"></script>
+  <script src="/scripts/scri.js"></script>
+  
+</body>
+</html>

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A beautiful and engaging blog with stunning UI/UX design">
+  <title><%= typeof title !== 'undefined' ? title : 'Edit Post | BlogNova' %></title>
+  
+  <!-- Favicon -->
+  <link rel="icon" href="/images/Logo.png">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;700;800&display=swap" rel="stylesheet">
+  
+  <!-- CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+  <link rel="stylesheet" href="/css/styles.css">
+  <link rel="stylesheet" href="/style/style.css">
+
+  <style>
+    :root {
+      --primary-color: #4361ee;
+      --primary-color-rgb: 67, 97, 238;
+      --secondary-color: #3a0ca3;
+      --accent-color: #f72585;
+      --accent-color-rgb: 247, 37, 133;
+      --text-color: #333;
+      --text-color-rgb: 51, 51, 51;
+      --background-color-rgb: 255, 255, 255;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Header with Navigation -->
+  <%- include('../includes/nav.ejs') %>
+  <%- include('../includes/bgDesign.ejs') %>
+  
+  <!-- Main Content -->
+  <main>
+    <div class="content-container">
+      <div class="form-container">
+        <h1 class="page-title">Edit Your Post</h1>
+        
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">Post Details</h2>
+            <span class="card-badge">Edit Mode</span>
+          </div>
+          
+          <div class="card-body">
+            <form action="/posts/<%= post._id %>?_method=PUT" method="post">
+              <div class="form-group" style="--animation-order: 0;">
+                <label for="post-name" class="form-label">Author Name</label>
+                <input id="post-name" name="post[name]" value="<%= post.name %>" type="text" class="form-control" required>
+              </div>
+              
+              <div class="form-group" style="--animation-order: 1;">
+                <label for="post-title" class="form-label">Post Title</label>
+                <input id="post-title" name="post[title]" value="<%= post.title %>" type="text" class="form-control" required>
+              </div>
+              
+              <div class="form-group" style="--animation-order: 2;">
+                <label for="post-description" class="form-label">Content</label>
+                <textarea id="post-description" name="post[description]" class="form-control" required><%= post.description %></textarea>
+              </div>
+              
+              <div class="form-group" style="--animation-order: 3;">
+                <label for="post-image" class="form-label">Featured Image URL</label>
+                <div class="input-group">
+                  <div class="input-group-prepend">URL</div>
+                  <input id="post-image" name="post[image]" value="<%= post.image %>" type="text" class="form-control">
+                </div>
+              </div>
+              
+              <div class="form-group" style="--animation-order: 4;">
+                <label class="form-label">Publish Status</label>
+                <div>
+                  <label class="toggle-switch">
+                    <input type="checkbox" name="post[published]" <%= post.published ? 'checked' : '' %>>
+                    <span class="toggle-slider"></span>
+                  </label>
+                  <span style="margin-left: 10px; vertical-align: middle;">Publish immediately</span>
+                </div>
+              </div>
+              
+              <div class="card-footer">
+                <div class="actions">
+                  <a href="/posts/<%= post._id %>" class="btn btn-cancel">Cancel</a>
+                  <button type="submit" class="btn btn-primary">Save Changes</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <%- include('../includes/footer.ejs') %>
+
+
+  <!-- JavaScript -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
+  <script>
+    // Initialize animations
+    document.addEventListener('DOMContentLoaded', function() {
+      // Apply fadeIn animation to form groups
+      const formGroups = document.querySelectorAll('.form-group');
+      formGroups.forEach((group, index) => {
+        group.style.setProperty('--animation-order', index);
+      });
+    });
+  </script>
+  <script src="/scripts/script.js"></script>
+</body>
+</html>

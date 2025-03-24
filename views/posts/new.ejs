@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Create a new blog post on BlogNova">
+  <title>Create New Post - BlogNova</title>
+  
+  <!-- Favicon -->
+  <link rel="icon" href="/images/Logo.png">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;700&display=swap" rel="stylesheet">
+  
+  <!-- CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+  <link rel="stylesheet" href="/css/styles.css">
+  
+  <link rel="stylesheet" href="/style/style.css">
+</head>
+
+<body>
+  <!-- Header with Navigation -->
+  <%- include('../includes/nav.ejs') %>
+  <%- include('../includes/bgDesign.ejs') %>
+  <!-- Main Content -->
+  <main>
+    <div class="content-container">
+      <h1 class="page-title">Create a New Post</h1>
+      
+      <div class="form-container">
+        <form action="/posts" method="post">
+          <div class="form-group">
+            <label for="post-name" class="form-label">Author Name</label>
+            <input type="text" id="post-name" name="post[name]" class="form-control" placeholder="Your name" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="post-title" class="form-label">Post Title</label>
+            <input type="text" id="post-title" name="post[title]" class="form-control" placeholder="Enter an engaging title" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="post-description" class="form-label">Post Content</label>
+            <textarea id="post-description" name="post[description]" class="form-control" placeholder="Write your blog post content here..." required></textarea>
+          </div>
+          
+          <div class="form-group">
+            <label for="post-image" class="form-label">Featured Image URL</label>
+            <input type="text" id="post-image" name="post[image]" class="form-control" placeholder="Enter the URL of your featured image">
+          </div>
+          
+          <div class="btn-container">
+            <a href="/posts" class="btn btn-secondary">Cancel</a>
+            <button type="submit" class="btn">Publish Post</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+    <%- include('../includes/footer.ejs') %>
+
+
+  <!-- JavaScript -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
+  <script src="/scripts/script.js"></script>
+</body>
+</html>
