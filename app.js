@@ -23,7 +23,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 app.use(express.static(path.join(__dirname, "public")));
 
-// Session Configuration - FIXED: Removed fixed expires property
+// Session Configuration
 const sessionOptions = {
   secret: process.env.SESSION_SECRET || "mysupersecretcode",
   resave: false,
@@ -88,7 +88,7 @@ const reviewSchema_mongo = new mongoose.Schema({
   },
   author: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "User", // FIXED: Changed from "Post" to "User"
+    ref: "Post",
   },
 });
 
@@ -186,23 +186,6 @@ const isLoggedIn = (req, res, next) => {
     req.session.returnTo = req.originalUrl;
     req.flash("error", "You must be signed in");
     return res.redirect("/login");
-  }
-  next();
-};
-
-// ADDED: New middleware to check ownership
-const isAuthor = async (req, res, next) => {
-  const { id } = req.params;
-  const post = await Post.findById(id);
-  
-  if (!post) {
-    req.flash("error", "Post not found");
-    return res.redirect("/posts");
-  }
-  
-  if (!post.owner.equals(req.user._id)) {
-    req.flash("error", "You don't have permission to do that");
-    return res.redirect(`/posts/${id}`);
   }
   next();
 };
@@ -339,16 +322,7 @@ app.get(
   "/posts/:id",
   wrapAsync(async (req, res) => {
     let { id } = req.params;
-    const post = await Post.findById(id)
-      .populate("reviews")
-      .populate("owner")
-      .populate({
-        path: "reviews",
-        populate: {
-          path: "author",
-          model: "User"
-        }
-      });
+    const post = await Post.findById(id).populate("reviews").populate("owner");
 
     if (!post) {
       throw new ExpressError(404, "Post Not Found");
@@ -370,15 +344,12 @@ app.post(
     res.redirect("/posts");
   })
 );
-
 app.get("/privacy-policy", (req, res) => {
   res.render("privacy.ejs");
 });
-
 app.get(
   "/posts/:id/edit",
   isLoggedIn,
-  isAuthor, // ADDED: ownership check
   wrapAsync(async (req, res) => {
     let { id } = req.params;
     const post = await Post.findById(id);
@@ -391,9 +362,8 @@ app.get(
 
 app.put(
   "/posts/:id",
-  isLoggedIn,
-  isAuthor, // ADDED: ownership check
   validatePost,
+  isLoggedIn,
   wrapAsync(async (req, res) => {
     let { id } = req.params;
     const post = await Post.findByIdAndUpdate(
@@ -404,7 +374,6 @@ app.put(
     if (!post) {
       throw new ExpressError(404, "Post Not Found");
     }
-    req.flash("success", "Post updated successfully");
     res.redirect(`/posts/${id}`);
   })
 );
@@ -412,7 +381,6 @@ app.put(
 app.delete(
   "/posts/:id",
   isLoggedIn,
-  isAuthor, // ADDED: ownership check
   wrapAsync(async (req, res) => {
     let { id } = req.params;
 
@@ -423,7 +391,7 @@ app.delete(
 
     // Use findByIdAndDelete which will trigger the middleware
     await Post.findByIdAndDelete(id);
-    req.flash("success", "Post deleted successfully");
+
     res.redirect("/posts");
   })
 );
@@ -431,7 +399,6 @@ app.delete(
 // Review Routes
 app.post(
   "/posts/:id/reviews",
-  isLoggedIn, // ADDED: require login for reviews
   validateReview,
   wrapAsync(async (req, res) => {
     const post = await Post.findById(req.params.id);
@@ -440,45 +407,24 @@ app.post(
     }
 
     const newReview = new Review(req.body.review);
-    newReview.author = req.user._id; // FIXED: Set author to current user instead of post
-    
+    newReview.author = post._id; // This may be optional depending on your schema
+
     await newReview.save();
     post.reviews.push(newReview._id);
     await post.save();
-    
-    req.flash("success", "Review added successfully");
+
     res.redirect(`/posts/${post._id}`);
   })
 );
 
-// ADDED: Middleware to check review ownership
-const isReviewAuthor = async (req, res, next) => {
-  const { id, reviewId } = req.params;
-  const review = await Review.findById(reviewId);
-  
-  if (!review) {
-    req.flash("error", "Review not found");
-    return res.redirect(`/posts/${id}`);
-  }
-  
-  if (!review.author.equals(req.user._id)) {
-    req.flash("error", "You don't have permission to do that");
-    return res.redirect(`/posts/${id}`);
-  }
-  next();
-};
-
 app.delete(
   "/posts/:id/reviews/:reviewId",
-  isLoggedIn,
-  isReviewAuthor, // ADDED: Check review ownership
   wrapAsync(async (req, res) => {
     const { id, reviewId } = req.params;
 
     await Post.findByIdAndUpdate(id, { $pull: { reviews: reviewId } });
     await Review.findByIdAndDelete(reviewId);
-    
-    req.flash("success", "Review deleted successfully");
+
     res.redirect(`/posts/${id}`);
   })
 );
