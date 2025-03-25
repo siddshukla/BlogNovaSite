@@ -54,7 +54,7 @@ const wrapAsync = function (fn) {
   };
 };
 
-// Define schemas with Joi (assumed to be in schema.js)
+// Define schemas with Joi
 const Joi = require('joi');
 
 const postSchema = Joi.object({
@@ -88,8 +88,12 @@ const reviewSchema_mongo = new mongoose.Schema({
   },
   author: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Post",
+    ref: "User", 
   },
+  post: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Post", 
+  }
 });
 
 const Review = mongoose.model("Review", reviewSchema_mongo);
@@ -165,7 +169,7 @@ main().catch((err) => {
   console.log(err);
 });
 
-// Passport configuration - INITIALIZE BEFORE CONFIGURING STRATEGIES
+// Passport configuration
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -181,6 +185,7 @@ app.use((req, res, next) => {
   next();
 });
 
+// Middleware functions
 const isLoggedIn = (req, res, next) => {
   if (!req.isAuthenticated()) {
     req.session.returnTo = req.originalUrl;
@@ -216,6 +221,24 @@ const validateReview = (req, res, next) => {
   } else {
     next();
   }
+};
+
+// Middleware to check review ownership
+const isReviewAuthor = async (req, res, next) => {
+  const { id, reviewId } = req.params;
+  const review = await Review.findById(reviewId);
+  
+  if (!review) {
+    req.flash("error", "Review not found");
+    return res.redirect(`/posts/${id}`);
+  }
+  
+  if (!review.author.equals(req.user._id)) {
+    req.flash("error", "You do not have permission to delete this review");
+    return res.redirect(`/posts/${id}`);
+  }
+  
+  next();
 };
 
 // ROUTES
@@ -322,7 +345,12 @@ app.get(
   "/posts/:id",
   wrapAsync(async (req, res) => {
     let { id } = req.params;
-    const post = await Post.findById(id).populate("reviews").populate("owner");
+    const post = await Post.findById(id)
+      .populate({
+        path: 'reviews',
+        populate: { path: 'author' } // Populate the author of each review
+      })
+      .populate("owner");
 
     if (!post) {
       throw new ExpressError(404, "Post Not Found");
@@ -344,9 +372,11 @@ app.post(
     res.redirect("/posts");
   })
 );
+
 app.get("/privacy-policy", (req, res) => {
   res.render("privacy.ejs");
 });
+
 app.get(
   "/posts/:id/edit",
   isLoggedIn,
@@ -399,6 +429,7 @@ app.delete(
 // Review Routes
 app.post(
   "/posts/:id/reviews",
+  isLoggedIn, // Ensure user is logged in
   validateReview,
   wrapAsync(async (req, res) => {
     const post = await Post.findById(req.params.id);
@@ -407,24 +438,29 @@ app.post(
     }
 
     const newReview = new Review(req.body.review);
-    newReview.author = post._id; // This may be optional depending on your schema
+    newReview.author = req.user._id; // Set review author to logged-in user
+    newReview.post = post._id; // Link review to the post
 
     await newReview.save();
     post.reviews.push(newReview._id);
     await post.save();
 
+    req.flash("success", "Review added successfully");
     res.redirect(`/posts/${post._id}`);
   })
 );
 
 app.delete(
   "/posts/:id/reviews/:reviewId",
+  isLoggedIn,
+  isReviewAuthor, // Check review ownership
   wrapAsync(async (req, res) => {
     const { id, reviewId } = req.params;
 
     await Post.findByIdAndUpdate(id, { $pull: { reviews: reviewId } });
     await Review.findByIdAndDelete(reviewId);
 
+    req.flash("success", "Review deleted successfully");
     res.redirect(`/posts/${id}`);
   })
 );
