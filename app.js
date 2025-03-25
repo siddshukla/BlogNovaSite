@@ -74,6 +74,28 @@ const reviewSchema = Joi.object({
 });
 
 // MongoDB Models
+// Reply Model
+const replySchema = new mongoose.Schema({
+  text: {
+    type: String,
+    required: true
+  },
+  author: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true
+  },
+  review: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Review",
+    required: true
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now
+  }
+});
+
 // Review Model
 const reviewSchema_mongo = new mongoose.Schema({
   comment: String,
@@ -93,10 +115,12 @@ const reviewSchema_mongo = new mongoose.Schema({
   post: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Post", 
-  }
+  },
+  replies: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Reply"
+  }]
 });
-
-const Review = mongoose.model("Review", reviewSchema_mongo);
 
 // User Model
 const userSchema = new mongoose.Schema({
@@ -107,8 +131,6 @@ const userSchema = new mongoose.Schema({
 });
 
 userSchema.plugin(passportLocalMongoose);
-
-const User = mongoose.model("User", userSchema);
 
 // Post Model
 const postSchema_mongo = new mongoose.Schema({
@@ -150,13 +172,10 @@ const postSchema_mongo = new mongoose.Schema({
   },
 });
 
-// Middleware for post deletion
-postSchema_mongo.post("findOneAndDelete", async function (doc) {
-  if (doc && doc.reviews.length > 0) {
-    await Review.deleteMany({ _id: { $in: doc.reviews } });
-  }
-});
-
+// Create models
+const Reply = mongoose.model("Reply", replySchema);
+const Review = mongoose.model("Review", reviewSchema_mongo);
+const User = mongoose.model("User", userSchema);
 const Post = mongoose.model("Post", postSchema_mongo);
 
 // Connect to Database
@@ -240,6 +259,26 @@ const isReviewAuthor = async (req, res, next) => {
   
   next();
 };
+
+// Middleware for post deletion
+postSchema_mongo.post("findOneAndDelete", async function (doc) {
+  if (doc && doc.reviews.length > 0) {
+    // Delete all reviews associated with the post
+    await Review.deleteMany({ _id: { $in: doc.reviews } });
+    
+    // Delete all replies associated with those reviews
+    const reviewIds = doc.reviews;
+    await Reply.deleteMany({ review: { $in: reviewIds } });
+  }
+});
+
+// Middleware for review deletion to also delete associated replies
+reviewSchema_mongo.post("findOneAndDelete", async function (doc) {
+  if (doc && doc.replies.length > 0) {
+    // Delete all replies associated with the review
+    await Reply.deleteMany({ _id: { $in: doc.replies } });
+  }
+});
 
 // ROUTES
 
@@ -348,7 +387,13 @@ app.get(
     const post = await Post.findById(id)
       .populate({
         path: 'reviews',
-        populate: { path: 'author' } // Populate the author of each review
+        populate: [
+          { path: 'author' }, 
+          { 
+            path: 'replies', 
+            populate: { path: 'author' } 
+          }
+        ]
       })
       .populate("owner");
 
@@ -462,6 +507,68 @@ app.delete(
 
     req.flash("success", "Review deleted successfully");
     res.redirect(`/posts/${id}`);
+  })
+);
+
+// Reply Routes
+app.post(
+  "/posts/:postId/reviews/:reviewId/replies",
+  isLoggedIn,
+  wrapAsync(async (req, res) => {
+    const { postId, reviewId } = req.params;
+    const { replyText } = req.body;
+
+    const review = await Review.findById(reviewId);
+    if (!review) {
+      req.flash("error", "Review not found");
+      return res.redirect(`/posts/${postId}`);
+    }
+
+    const newReply = new Reply({
+      text: replyText,
+      author: req.user._id,
+      review: reviewId
+    });
+
+    await newReply.save();
+
+    // Add reply to the review's replies array
+    review.replies.push(newReply._id);
+    await review.save();
+
+    req.flash("success", "Reply added successfully");
+    res.redirect(`/posts/${postId}`);
+  })
+);
+
+app.delete(
+  "/posts/:postId/reviews/:reviewId/replies/:replyId",
+  isLoggedIn,
+  wrapAsync(async (req, res) => {
+    const { postId, reviewId, replyId } = req.params;
+
+    const reply = await Reply.findById(replyId);
+    if (!reply) {
+      req.flash("error", "Reply not found");
+      return res.redirect(`/posts/${postId}`);
+    }
+
+    // Check if the current user is the reply author
+    if (!reply.author.equals(req.user._id)) {
+      req.flash("error", "You are not authorized to delete this reply");
+      return res.redirect(`/posts/${postId}`);
+    }
+
+    // Remove reply from review's replies array
+    await Review.findByIdAndUpdate(reviewId, { 
+      $pull: { replies: replyId } 
+    });
+
+    // Delete the reply
+    await Reply.findByIdAndDelete(replyId);
+
+    req.flash("success", "Reply deleted successfully");
+    res.redirect(`/posts/${postId}`);
   })
 );
 

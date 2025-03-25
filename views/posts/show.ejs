@@ -13,19 +13,20 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   
   <!-- CSS -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
   <link rel="stylesheet" href="/css/styles.css">
   <link rel="stylesheet" href="/style/style.css">
-
 </head>
 
 <body>
   <!-- Header with Navigation -->
   <%- include('../includes/nav.ejs') %>
   <%- include('../includes/bgDesign.ejs') %>
+  
   <!-- Main Content -->
   <main>
     <div class="content-container">
@@ -34,9 +35,7 @@
           <h1 class="post-title"><%= post.title %></h1>
           <div class="post-meta">
             <span><i class="fas fa-user"></i> <%= post.name %></span>
-            <span><i class="fas fa-calendar"></i> <%= new Date(post.date).toLocaleDateString("en-US", { month: 'short', day: 'numeric', year: 'numeric' }) %></span>            <!-- <% if (post.category) { %>
-            <span><i class="fas fa-tag"></i> <%= post.category %></span>
-            <% } %> -->
+            <span><i class="fas fa-calendar"></i> <%= new Date(post.date).toLocaleDateString("en-US", { month: 'short', day: 'numeric', year: 'numeric' }) %></span>
           </div>
         </div>
         
@@ -48,6 +47,7 @@
           <% } %>
         </div>
         <% } %>
+        
         <div class="post-description">
           <p><%= post.description %></p>
         </div>
@@ -79,7 +79,7 @@
             </button>
           </form>
         </div>
-       <% } %>
+        <% } %>
       </div>
     </div>
 
@@ -117,6 +117,7 @@
         <button class="submit-button">Submit</button>
       </form>
       <% } %>
+      
       <hr class="review-divider">
       
       <p class="all-reviews-heading"><b>All Reviews</b></p>
@@ -135,7 +136,34 @@
               <% } %>
               <span class="rating-text"><%= review.rating %> stars</span>
             </div>
+            
+            <!-- Replies Section -->
+            <% if(currUser) { %>
+              <form action="/posts/<%= post._id %>/reviews/<%= review._id %>/replies" method="POST" class="reply-form">
+                <input type="text" name="replyText" placeholder="Add a reply..." required class="reply-input">
+                <button type="submit" class="reply-button">Reply</button>
+              </form>
+            <% } %>
+            
+            <% if(review.replies && review.replies.length > 0) { %>
+              <div class="replies-list">
+                <% review.replies.forEach(function(reply) { %>
+                <div class="reply-card">
+                  <p class="reply-content">
+                    <strong>@<%= reply.author ? reply.author.username : 'Unknown user' %></strong>
+                    <%= reply.text %>
+                  </p>
+                  <% if(currUser && reply.author && currUser._id.equals(reply.author._id)) { %>
+                  <form action="/posts/<%= post._id %>/reviews/<%= review._id %>/replies/<%= reply._id %>?_method=DELETE" method="post">
+                    <button type="submit" class="delete-reply-button">Delete</button>
+                  </form>
+                  <% } %>
+                </div>
+                <% }); %>
+              </div>
+            <% } %>
           </div>
+          
           <% if(currUser && review.author && currUser._id.equals(review.author._id)) { %>
           <form action="/posts/<%= post._id%>/reviews/<%= review._id %>?_method=DELETE" method="post" class="delete-form">
             <button class="delete-button">Delete</button>
@@ -144,292 +172,6 @@
         </div>
       <% } %>
     </div>
-    <style>
-      /* Modern Color Scheme with Purple (#563988) Stars */
-:root {
-  --primary-color: #563988; /* Changed to your specified color */
-  --primary-glow: rgba(86, 57, 136, 0.6); /* Changed to match primary */
-  --secondary-color: #452c6b; /* Darker shade for gradient */
-  --accent-color: #f43f5e;
-  --background-color: #f8fafc;
-  --card-background: #ffffff;
-  --text-primary: #1e293b;
-  --text-secondary: #64748b;
-  --border-color: #e2e8f0;
-  --star-color: #563988; /* Changed to your specified color */
-  --star-glow: rgba(86, 57, 136, 0.7); /* Changed to match */
-  --star-inactive: #cbd5e1;
-}
-
-/* Container Styles - Dramatically increased width */
-.review-container {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  max-width: 1400px; /* Significantly increased from 1000px */
-  margin: 0 auto;
-  padding: 3rem; /* Increased padding */
-  background-color: var(--background-color);
-  color: var(--text-primary);
-  border-radius: 12px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
-  width: 90%;
-}
-
-/* Heading Styles */
-.review-heading {
-  font-size: 2rem; /* Increased size */
-  font-weight: 700;
-  margin-bottom: 1.75rem;
-  color: var(--primary-color);
-  position: relative;
-}
-
-.review-heading::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  bottom: -8px;
-  height: 4px; /* Thicker underline */
-  width: 80px; /* Wider underline */
-  background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
-  border-radius: 2px;
-}
-
-/* Form Styles */
-.review-form {
-  background-color: var(--card-background);
-  padding: 2rem; /* Increased padding */
-  border-radius: 8px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-  margin-bottom: 2.5rem;
-}
-
-/* Star Rating Styles - Larger stars */
-.rating-container {
-  margin-bottom: 1.5rem;
-}
-
-.rating-label {
-  display: block;
-  font-weight: 600;
-  margin-bottom: 0.75rem;
-  color: var(--text-primary);
-  font-size: 1.1rem; /* Larger label */
-}
-
-.star-rating {
-  display: flex;
-  flex-direction: row-reverse;
-  justify-content: flex-end;
-  position: relative;
-}
-
-.star-input {
-  display: none;
-}
-
-.star-label {
-  font-size: 3rem; /* Much larger stars */
-  color: var(--star-inactive);
-  cursor: pointer;
-  transition: all 0.2s ease;
-  margin-right: 0.5rem; /* More space between stars */
-}
-
-.star-label:hover,
-.star-label:hover ~ .star-label,
-.star-input:checked ~ .star-label {
-  color: var(--star-color);
-  text-shadow: 0 0 15px var(--star-glow), 0 0 20px var(--star-glow); /* Stronger glow */
-  transform: scale(1.15); /* Larger scale on hover */
-}
-
-/* Comment Field Styles - Much larger */
-.comment-container {
-  margin-bottom: 2rem;
-}
-
-.comment-label {
-  display: block;
-  font-weight: 600;
-  margin-bottom: 0.75rem;
-  color: var(--text-primary);
-  font-size: 1.1rem; /* Larger label */
-}
-
-.comment-input {
-  width: 100%;
-  min-height: 200px; /* Much taller textarea */
-  padding: 1rem; /* More padding */
-  border: 1px solid var(--border-color);
-  border-radius: 8px; /* Larger radius */
-  background-color: white;
-  font-family: inherit;
-  font-size: 1.1rem; /* Larger text */
-  resize: vertical;
-  transition: all 0.2s ease;
-}
-
-.comment-input:focus {
-  outline: none;
-  border-color: var(--primary-color);
-  box-shadow: 0 0 0 3px var(--primary-glow);
-}
-
-.comment-input::placeholder {
-  color: var(--text-secondary);
-}
-
-/* Button Styles - Larger */
-.submit-button {
-  background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
-  color: white;
-  border: none;
-  padding: 0.9rem 2rem; /* Larger button */
-  font-size: 1.1rem; /* Larger text */
-  font-weight: 600;
-  border-radius: 8px; /* Larger radius */
-  cursor: pointer;
-  transition: all 0.2s ease;
-  box-shadow: 0 4px 12px rgba(86, 57, 136, 0.3);
-}
-
-.submit-button:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 6px 20px rgba(86, 57, 136, 0.4);
-}
-
-.submit-button:active {
-  transform: translateY(0);
-}
-
-/* Divider */
-.review-divider {
-  border: none;
-  height: 2px; /* Thicker divider */
-  background-color: var(--border-color);
-  margin: 2.5rem 0; /* More margin */
-}
-
-/* All Reviews Section */
-.all-reviews-heading {
-  font-size: 1.5rem; /* Larger heading */
-  margin-bottom: 1.75rem;
-  color: var(--text-primary);
-  font-weight: 600;
-}
-
-/* Review Card Styles - Much wider content */
-.review-card {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  background-color: var(--card-background);
-  padding: 2rem; /* Much more padding */
-  border-radius: 10px; /* Larger radius */
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
-  margin-bottom: 1.75rem; /* More space between cards */
-  transition: transform 0.2s ease;
-}
-
-.review-card:hover {
-  transform: translateY(-4px); /* More movement */
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-}
-
-.review-content {
-  flex: 1;
-  padding-right: 3rem; /* More space for wider content */
-}
-
-.reviewer-name {
-  font-size: 1.2rem; /* Larger name */
-  font-weight: 600;
-  margin: 0 0 0.75rem 0;
-  color: var(--text-primary);
-}
-
-.review-text {
-  margin: 0.75rem 0 1.25rem;
-  color: var(--text-primary);
-  line-height: 1.6;
-  font-size: 1.05rem; /* Larger text */
-}
-
-/* Star Display Styles - Purple stars */
-.review-stars {
-  display: flex;
-  align-items: center;
-}
-
-.star {
-  font-size: 1.5rem; /* Larger stars */
-  margin-right: 0.35rem;
-}
-
-.star.filled {
-  color: var(--star-color);
-  text-shadow: 0 0 8px var(--star-glow); /* More glow */
-}
-
-.star.empty {
-  color: var(--star-inactive);
-}
-
-.rating-text {
-  margin-left: 0.75rem;
-  font-size: 1rem; /* Larger text */
-  color: var(--text-secondary);
-}
-
-/* Delete Button Styles - Larger */
-.delete-button {
-  background-color: transparent;
-  color: var(--accent-color);
-  border: 1px solid var(--accent-color);
-  padding: 0.6rem 1.25rem; /* Larger button */
-  border-radius: 8px;
-  font-size: 1rem; /* Larger text */
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.delete-button:hover {
-  background-color: var(--accent-color);
-  color: white;
-}
-
-/* Responsive Adjustments */
-@media (max-width: 992px) {
-  .review-container {
-    max-width: 100%;
-    padding: 2rem;
-  }
-}
-
-@media (max-width: 768px) {
-  .review-container {
-    padding: 1.5rem;
-  }
-  
-  .review-card {
-    flex-direction: column;
-    padding: 1.5rem;
-  }
-  
-  .review-content {
-    padding-right: 0;
-  }
-  
-  .delete-form {
-    margin-top: 1.25rem;
-    align-self: flex-end;
-  }
-  
-  .star-label {
-    font-size: 2.5rem;
-  }
-}
-    </style>
   </main>
 
   <!-- Image Lightbox -->
@@ -443,8 +185,546 @@
 
   <!-- JavaScript -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
-  <script src="/scripts/script.js">
-    
-  </script>
+  <script src="/scripts/script.js"></script>
+  
+  <style>
+    /* Modern Color Scheme with Purple (#563988) Stars */
+    :root {
+      --primary-color: #563988;
+      --primary-glow: rgba(86, 57, 136, 0.6);
+      --secondary-color: #452c6b;
+      --accent-color: #f43f5e;
+      --background-color: #f8fafc;
+      --card-background: #ffffff;
+      --text-primary: #1e293b;
+      --text-secondary: #64748b;
+      --border-color: #e2e8f0;
+      --star-color: #563988;
+      --star-glow: rgba(86, 57, 136, 0.7);
+      --star-inactive: #cbd5e1;
+      --success-color: #10b981;
+    }
+
+    /* Base Styles */
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--background-color);
+      color: var(--text-primary);
+      line-height: 1.6;
+    }
+
+    /* Post Container Styles */
+    .content-container {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+
+    .post-container {
+      background-color: var(--card-background);
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+      padding: 2.5rem;
+      margin-bottom: 3rem;
+    }
+
+    .post-header {
+      margin-bottom: 2rem;
+    }
+
+    .post-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 1rem;
+      line-height: 1.3;
+    }
+
+    .post-meta {
+      display: flex;
+      gap: 1.5rem;
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      margin-bottom: 1rem;
+    }
+
+    .post-meta i {
+      margin-right: 0.4rem;
+    }
+
+    .post-image-container {
+      margin: 2rem 0;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .post-featured-image {
+      width: 100%;
+      height: auto;
+      max-height: 600px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+
+    .image-caption {
+      text-align: center;
+      font-style: italic;
+      color: var(--text-secondary);
+      margin-top: 0.5rem;
+      font-size: 0.95rem;
+    }
+
+    .post-description {
+      font-size: 1.1rem;
+      line-height: 1.7;
+      color: var(--text-primary);
+      margin-bottom: 2rem;
+    }
+
+    .post-content {
+      font-size: 1.1rem;
+      line-height: 1.8;
+      color: var(--text-primary);
+    }
+
+    .post-content p {
+      margin-bottom: 1.5rem;
+    }
+
+    .post-gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .gallery-item {
+      border-radius: 8px;
+      overflow: hidden;
+      transition: transform 0.3s ease;
+    }
+
+    .gallery-item:hover {
+      transform: scale(1.02);
+    }
+
+    .gallery-image {
+      width: 100%;
+      height: 250px;
+      object-fit: cover;
+      cursor: pointer;
+    }
+
+    .post-actions {
+      display: flex;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    /* Review Section Styles */
+    .review-container {
+      max-width: 1200px;
+      margin: 0 auto 3rem;
+      padding: 0 1rem;
+    }
+
+    .review-heading {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 1.75rem;
+      color: var(--primary-color);
+      position: relative;
+    }
+
+    .review-heading::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: -8px;
+      height: 4px;
+      width: 80px;
+      background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+      border-radius: 2px;
+    }
+
+    .review-form {
+      background-color: var(--card-background);
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+      margin-bottom: 2.5rem;
+    }
+
+    .rating-container {
+      margin-bottom: 1.5rem;
+    }
+
+    .rating-label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+      color: var(--text-primary);
+      font-size: 1.1rem;
+    }
+
+    .star-rating {
+      display: flex;
+      flex-direction: row-reverse;
+      justify-content: flex-end;
+      position: relative;
+    }
+
+    .star-input {
+      display: none;
+    }
+
+    .star-label {
+      font-size: 2.5rem;
+      color: var(--star-inactive);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      margin-right: 0.5rem;
+    }
+
+    .star-label:hover,
+    .star-label:hover ~ .star-label,
+    .star-input:checked ~ .star-label {
+      color: var(--star-color);
+      text-shadow: 0 0 15px var(--star-glow), 0 0 20px var(--star-glow);
+      transform: scale(1.15);
+    }
+
+    .comment-container {
+      margin-bottom: 2rem;
+    }
+
+    .comment-label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+      color: var(--text-primary);
+      font-size: 1.1rem;
+    }
+
+    .comment-input {
+      width: 100%;
+      min-height: 150px;
+      padding: 1rem;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      background-color: white;
+      font-family: inherit;
+      font-size: 1.1rem;
+      resize: vertical;
+      transition: all 0.2s ease;
+    }
+
+    .comment-input:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px var(--primary-glow);
+    }
+
+    .comment-input::placeholder {
+      color: var(--text-secondary);
+      opacity: 0.7;
+    }
+
+    .submit-button {
+      background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+      color: white;
+      border: none;
+      padding: 0.9rem 2rem;
+      font-size: 1.1rem;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 12px rgba(86, 57, 136, 0.3);
+    }
+
+    .submit-button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(86, 57, 136, 0.4);
+    }
+
+    .submit-button:active {
+      transform: translateY(0);
+    }
+
+    .review-divider {
+      border: none;
+      height: 2px;
+      background-color: var(--border-color);
+      margin: 2.5rem 0;
+    }
+
+    .all-reviews-heading {
+      font-size: 1.5rem;
+      margin-bottom: 1.75rem;
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    .review-card {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      background-color: var(--card-background);
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+      margin-bottom: 1.75rem;
+      transition: transform 0.2s ease;
+    }
+
+    .review-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    }
+
+    .review-content {
+      flex: 1;
+      padding-right: 2rem;
+    }
+
+    .reviewer-name {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin: 0 0 0.75rem 0;
+      color: var(--text-primary);
+    }
+
+    .review-text {
+      margin: 0.75rem 0 1.25rem;
+      color: var(--text-primary);
+      line-height: 1.6;
+      font-size: 1.05rem;
+    }
+
+    .review-stars {
+      display: flex;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .star {
+      font-size: 1.5rem;
+      margin-right: 0.35rem;
+    }
+
+    .star.filled {
+      color: var(--star-color);
+      text-shadow: 0 0 8px var(--star-glow);
+    }
+
+    .star.empty {
+      color: var(--star-inactive);
+    }
+
+    .rating-text {
+      margin-left: 0.75rem;
+      font-size: 1rem;
+      color: var(--text-secondary);
+    }
+
+    /* Reply Form Styles */
+    .reply-form {
+      display: flex;
+      gap: 0.5rem;
+      margin: 1rem 0;
+    }
+
+    .reply-input {
+      flex: 1;
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      font-size: 1rem;
+    }
+
+    .reply-input:focus {
+      outline: none;
+      border-color: var(--primary-color);
+    }
+
+    .reply-button {
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 0.75rem 1.25rem;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+
+    .reply-button:hover {
+      background-color: var(--secondary-color);
+    }
+
+    /* Replies List Styles */
+    .replies-list {
+      margin-top: 1rem;
+      padding-left: 1rem;
+      border-left: 2px solid var(--border-color);
+    }
+
+    .reply-card {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .reply-card:last-child {
+      border-bottom: none;
+    }
+
+    .reply-content {
+      margin: 0;
+      flex: 1;
+    }
+
+    /* Delete Button Styles */
+    .delete-form {
+      margin-left: 1rem;
+    }
+
+    .delete-button {
+      background-color: transparent;
+      color: var(--accent-color);
+      border: 1px solid var(--accent-color);
+      padding: 0.6rem 1.25rem;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .delete-button:hover {
+      background-color: var(--accent-color);
+      color: white;
+    }
+
+    .delete-reply-button {
+      background-color: transparent;
+      color: var(--accent-color);
+      border: 1px solid var(--accent-color);
+      padding: 0.4rem 0.8rem;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      margin-left: 1rem;
+    }
+
+    .delete-reply-button:hover {
+      background-color: var(--accent-color);
+      color: white;
+    }
+
+    /* Lightbox Styles */
+    .lightbox {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.9);
+      justify-content: center;
+      align-items: center;
+    }
+
+    .lightbox-content {
+      max-width: 90%;
+      max-height: 90%;
+    }
+
+    .lightbox-close {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      color: white;
+      font-size: 40px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    /* Responsive Styles */
+    @media (max-width: 992px) {
+      .post-container {
+        padding: 2rem;
+      }
+      
+      .review-container {
+        padding: 0 1rem;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .post-container {
+        padding: 1.5rem;
+      }
+      
+      .post-title {
+        font-size: 2rem;
+      }
+      
+      .review-card {
+        flex-direction: column;
+        padding: 1.5rem;
+      }
+      
+      .review-content {
+        padding-right: 0;
+        margin-bottom: 1rem;
+      }
+      
+      .delete-form {
+        margin-top: 1rem;
+        align-self: flex-end;
+      }
+      
+      .star-label {
+        font-size: 2rem;
+      }
+      
+      .comment-input {
+        min-height: 120px;
+      }
+    }
+
+    @media (max-width: 576px) {
+      .post-container {
+        padding: 1rem;
+      }
+      
+      .post-title {
+        font-size: 1.75rem;
+      }
+      
+      .post-meta {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      
+      .post-actions {
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+      
+      .star-label {
+        font-size: 1.75rem;
+      }
+      
+      .submit-button {
+        width: 100%;
+      }
+    }
+  </style>
 </body>
 </html>
