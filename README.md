@@ -191,9 +191,7 @@ BlogNova protects your realm with:
 4. Share your creation (`git push origin feature/amazing-magic`)
 5. Open a scroll (Pull Request) for review
 
-## 📜 License
 
-This project is protected under the MIT License - see the LICENSE scroll for mystical details.
 
 <div align="center">
   
